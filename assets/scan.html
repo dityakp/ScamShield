@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scan Message or URL – ScamShield</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <div class="spinner-overlay" id="global-spinner" aria-hidden="true">
+        <div class="spinner" aria-label="Loading"></div>
+    </div>
+    <div class="toast-container" id="toast-container"></div>
+
+    <header class="navbar">
+        <div class="container navbar-inner">
+            <a href="index.html" class="brand" aria-label="ScamShield home">
+                <div class="brand-mark"></div>
+                <div>
+                    <div class="brand-text-main">ScamShield</div>
+                    <span class="brand-text-sub">AI scam firewall</span>
+                </div>
+            </a>
+
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+                <span class="nav-toggle-bar"></span>
+            </button>
+
+            <nav class="nav-menu" id="nav-menu" aria-label="Primary">
+                <div class="nav-links">
+                    <a class="nav-link" href="scan.html">Scan</a>
+                    <a class="nav-link" href="report.html">Report Scam</a>
+                    <a class="nav-link" href="dashboard.html">Dashboard</a>
+                </div>
+                <div class="nav-auth-links">
+                    <a class="nav-link" href="login.html">Login</a>
+                    <a class="nav-link primary" href="register.html">Get Started</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="section">
+        <div class="container">
+            <div class="section-header" style="text-align: left; margin-bottom: 1.8rem;">
+                <div class="section-kicker">Instant AI scan</div>
+                <h1 class="section-title">Scan a suspicious message or URL</h1>
+                <p class="section-subtitle" style="text-align: left;">
+                    Enter any text, SMS, email snippet or website link. ScamShield will simulate a call to your
+                    <code>/predict</code> backend endpoint and display a risk level, score and explanation.
+                </p>
+            </div>
+
+            <div class="scan-layout">
+                <section class="card">
+                    <header class="card-header">
+                        <h2 class="card-title">Paste suspicious content</h2>
+                        <p class="card-subtitle">
+                            The more context you provide (sender, amount, call to action), the better your model can
+                            reason about the risk.
+                        </p>
+                    </header>
+                    <form id="scan-form" class="form-grid" novalidate>
+                        <div class="form-field">
+                            <label class="form-label" for="scanType">Scan type <span>*</span></label>
+                            <select id="scanType" class="select" required>
+                                <option value="">Select type</option>
+                                <option value="message">Message / Email</option>
+                                <option value="url">Website / URL</option>
+                                <option value="other">Other text</option>
+                            </select>
+                            <div id="scanTypeError" class="field-error"></div>
+                        </div>
+
+                        <div class="form-field">
+                            <label class="form-label" for="scanInput">Suspicious message or URL <span>*</span></label>
+                            <textarea id="scanInput" class="textarea" rows="6"
+                                placeholder="Example: Dear customer, your bank account will be suspended in 24 hours. Click https://secure-verification-update.com to update your KYC."
+                                required></textarea>
+                            <div id="scanInputError" class="field-error"></div>
+                            <p class="field-hint">
+                                Do not paste passwords or OTPs. This demo does not send data to any server until you
+                                implement the
+                                <code>/predict</code> API.
+                            </p>
+                        </div>
+
+                        <div class="form-actions justify-end">
+                            <button type="submit" class="btn btn-primary" id="scanButton">Run AI scan</button>
+                        </div>
+                    </form>
+                </section>
+
+                <aside class="card scan-result" aria-live="polite">
+                    <header class="card-header">
+                        <h2 class="card-title">Risk assessment</h2>
+                        <p class="card-subtitle">
+                            Below is a dummy response that simulates what your backend model could return. Connect it to
+                            <code>/predict</code> later.
+                        </p>
+                    </header>
+                    <div id="scanResultEmpty" class="text-muted">
+                        No scan yet. Paste a suspicious message and click <strong>Run AI scan</strong> to see the
+                        prediction.
+                    </div>
+                    <div id="scanResult" style="display: none;">
+                        <div class="result-header">
+                            <span id="riskPill" class="risk-pill">
+                                <span>Risk level:</span>
+                                <strong id="riskLevelText">Medium</strong>
+                            </span>
+                            <span class="risk-score">Score: <span id="riskScore">72</span>%</span>
+                        </div>
+                        <p class="risk-explanation" id="riskExplanation">
+                            Dummy explanation will appear here, highlighting phishing indicators such as fake domains,
+                            urgency tactics and
+                            financial bait.
+                        </p>
+                        <div class="mt-md">
+                            <div class="field-hint">
+                                <strong>Dummy JSON preview:</strong>
+                                <pre id="scanJsonPreview" style="font-size: 0.75rem; margin-top: 0.4rem;"></pre>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <div>© <span id="year"></span> ScamShield. Educational prototype.</div>
+            <div class="footer-links">
+                <a class="footer-link" href="index.html">Home</a>
+                <a class="footer-link" href="report.html">Report</a>
+                <a class="footer-link" href="dashboard.html">Dashboard</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/scan.js"></script>
+</body>
+
+</html>
