@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard – ScamShield</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <div class="spinner-overlay" id="global-spinner" aria-hidden="true">
+        <div class="spinner" aria-label="Loading"></div>
+    </div>
+    <div class="toast-container" id="toast-container"></div>
+
+    <header class="navbar">
+        <div class="container navbar-inner">
+            <a href="index.html" class="brand" aria-label="ScamShield home">
+                <div class="brand-mark"></div>
+                <div>
+                    <div class="brand-text-main">ScamShield</div>
+                    <span class="brand-text-sub">AI scam firewall</span>
+                </div>
+            </a>
+
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+                <span class="nav-toggle-bar"></span>
+            </button>
+
+            <nav class="nav-menu" id="nav-menu" aria-label="Primary">
+                <div class="nav-links">
+                    <a class="nav-link" href="scan.html">Scan</a>
+                    <a class="nav-link" href="report.html">Report Scam</a>
+                    <a class="nav-link" href="dashboard.html">Dashboard</a>
+                </div>
+                <div class="nav-auth-links">
+                    <button class="nav-link primary" id="logoutButton" type="button">Logout</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="section">
+        <div class="container">
+            <header class="dashboard-header">
+                <div>
+                    <h1 class="dashboard-title">Welcome back, <span id="dashboardUserName">Analyst</span>.</h1>
+                    <p class="dashboard-subtitle">
+                        Review recent AI scans, see reported scams and validate patterns for your final‑year analysis
+                        chapter.
+                    </p>
+                </div>
+                <div class="badge-soft">Demo mode · Connect /history &amp; /report</div>
+            </header>
+
+            <div class="dashboard-grid">
+                <section class="card">
+                    <header class="card-header">
+                        <h2 class="card-title">Recent scans</h2>
+                        <p class="card-subtitle">
+                            Dummy data populated on load. Replace with data from your <code>/history</code> endpoint.
+                        </p>
+                    </header>
+                    <div style="overflow-x: auto;">
+                        <table class="table" id="scanHistoryTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Snippet</th>
+                                    <th>Risk</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scanHistoryBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <aside class="card">
+                    <header class="card-header">
+                        <h2 class="card-title">Reported scams</h2>
+                        <p class="card-subtitle">
+                            High‑level overview of community reports. Shows how scams spread across channels.
+                        </p>
+                    </header>
+                    <div class="history-list" id="reportHistoryList"></div>
+                    <div class="mt-md">
+                        <a href="report.html" class="btn btn-outline"
+                            style="width: 100%; justify-content: center;">Report a new scam</a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <div>© <span id="year"></span> ScamShield. Dashboard for your AI‑driven scam detections.</div>
+            <div class="footer-links">
+                <a class="footer-link" href="index.html">Home</a>
+                <a class="footer-link" href="scan.html">Scan</a>
+                <a class="footer-link" href="report.html">Report</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>
