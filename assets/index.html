@@ -1,401 +1,437 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="ScamShield - AI-powered scam detector. Paste any suspicious message, URL, or email and get an instant risk verdict.">
+  <meta name="description"
+    content="ScamShield - AI-powered scam detector. Paste any suspicious message, URL, or email and get an instant risk verdict.">
   <title>ScamShield - AI Scam Detector</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
 
-<!-- CURSOR -->
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
+  <!-- CURSOR -->
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
 
-<!-- GRID OVERLAY -->
-<div class="grid-overlay"></div>
+  <!-- GRID OVERLAY -->
+  <div class="grid-overlay"></div>
 
-<!-- SCANLINE -->
-<div class="scanline"></div>
+  <!-- SCANLINE -->
+  <div class="scanline"></div>
 
-<!-- HEX RAIN -->
-<div class="hex-rain" id="hexRain"></div>
+  <!-- HEX RAIN -->
+  <div class="hex-rain" id="hexRain"></div>
 
-<!-- CANVAS -->
-<canvas id="bgCanvas"></canvas>
+  <!-- CANVAS -->
+  <canvas id="bgCanvas"></canvas>
 
-<!-- ─── NAV ─────────────────────────────────── -->
-<nav>
-  <a href="#hero" class="nav-brand">
-    <div class="nav-shield">
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-        <path d="M9 1.5L2.25 4.5V9C2.25 12.9 5.16 16.6 9 17.25C12.84 16.6 15.75 12.9 15.75 9V4.5L9 1.5Z" stroke="#00e5ff" stroke-width="1.2" fill="none"/>
-        <path d="M6 9l2.25 2.25L12 7.5" stroke="#00e5ff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+  <!-- ─── NAV ─────────────────────────────────── -->
+  <nav>
+    <a href="#hero" class="nav-brand">
+      <div class="nav-shield">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M9 1.5L2.25 4.5V9C2.25 12.9 5.16 16.6 9 17.25C12.84 16.6 15.75 12.9 15.75 9V4.5L9 1.5Z"
+            stroke="#00e5ff" stroke-width="1.2" fill="none" />
+          <path d="M6 9l2.25 2.25L12 7.5" stroke="#00e5ff" stroke-width="1.4" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </div>
+      <span class="nav-brand-name">Scam<span>Shield</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#scanner">Scanner</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#stats">Stats</a></li>
+      <li><a href="#contact" class="nav-cta"><span>Contact</span></a></li>
+    </ul>
+  </nav>
+
+  <!-- ─── HERO ─────────────────────────────────── -->
+  <section id="hero">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Floating data strings -->
+    <div class="hero-floaters" id="heroFloaters"></div>
+
+    <div class="hero-inner">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        AI-Powered · Real-Time · Free to Use
+      </div>
+      <h1 class="hero-title">
+        <span class="title-detect">DETECT</span>
+        <span class="title-scams">SCAMS</span>
+        <span class="title-instantly">INSTANTLY</span>
+      </h1>
+      <p class="hero-sub">Paste any suspicious message, URL, or email. Our AI analyzes it in under a second and gives
+        you a clear risk verdict — so you stay safe online.</p>
+      <div class="hero-btns">
+        <a href="#scanner" class="btn btn-primary">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.4" />
+            <path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+          </svg>
+          Scan Now — It's Free
+        </a>
+        <a href="#how" class="btn btn-ghost">How It Works →</a>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-item"><span class="trust-icon">🛡</span>95.2% Accuracy</div>
+        <div class="trust-item"><span class="trust-icon">⚡</span>&lt;1s Response</div>
+        <div class="trust-item"><span class="trust-icon">🔒</span>No Data Stored</div>
+        <div class="trust-item"><span class="trust-icon">🌐</span>20K+ Scams Caught</div>
+      </div>
     </div>
-    <span class="nav-brand-name">Scam<span>Shield</span></span>
-  </a>
-  <ul class="nav-links">
-    <li><a href="#how">How It Works</a></li>
-    <li><a href="#scanner">Scanner</a></li>
-    <li><a href="#features">Features</a></li>
-    <li><a href="#stats">Stats</a></li>
-    <li><a href="#contact" class="nav-cta"><span>Contact</span></a></li>
-  </ul>
-</nav>
+  </section>
 
-<!-- ─── HERO ─────────────────────────────────── -->
-<section id="hero">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
+  <!-- ─── HOW IT WORKS ─────────────────────────── -->
+  <section id="how">
+    <div class="section-head reveal">
+      <div class="section-tag">Process</div>
+      <h2 class="section-title">HOW IT WORKS</h2>
+      <p class="section-sub">Three simple steps. Zero technical knowledge required. Anyone can use it.</p>
+    </div>
+    <div class="how-grid reveal">
+      <div class="how-card">
+        <div class="how-step">01</div>
+        <div class="how-icon">📋</div>
+        <h3>Paste Your Content</h3>
+        <p>Copy the suspicious message, URL, email, or any text you've received and paste it into our scanner box.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-step">02</div>
+        <div class="how-icon">🤖</div>
+        <h3>AI Analyzes It</h3>
+        <p>Our machine learning model scans for scam patterns, phishing keywords, suspicious URLs, and social
+          engineering tactics.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-step">03</div>
+        <div class="how-icon">✅</div>
+        <h3>Get Your Verdict</h3>
+        <p>Receive an instant risk level — High, Medium, or Low — along with a probability score and actionable safety
+          advice.</p>
+      </div>
+    </div>
+  </section>
 
-  <!-- Floating data strings -->
-  <div class="hero-floaters" id="heroFloaters"></div>
-
-  <div class="hero-inner">
-    <div class="hero-badge">
-      <span class="badge-dot"></span>
-      AI-Powered · Real-Time · Free to Use
-    </div>
-    <h1 class="hero-title">
-      <span class="title-detect">DETECT</span>
-      <span class="title-scams">SCAMS</span>
-      <span class="title-instantly">INSTANTLY</span>
-    </h1>
-    <p class="hero-sub">Paste any suspicious message, URL, or email. Our AI analyzes it in under a second and gives you a clear risk verdict — so you stay safe online.</p>
-    <div class="hero-btns">
-      <a href="#scanner" class="btn btn-primary">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-        Scan Now — It's Free
-      </a>
-      <a href="#how" class="btn btn-ghost">How It Works →</a>
-    </div>
-    <div class="hero-trust">
-      <div class="trust-item"><span class="trust-icon">🛡</span>99.2% Accuracy</div>
-      <div class="trust-item"><span class="trust-icon">⚡</span>&lt;1s Response</div>
-      <div class="trust-item"><span class="trust-icon">🔒</span>No Data Stored</div>
-      <div class="trust-item"><span class="trust-icon">🌐</span>50,000+ Scams Caught</div>
-    </div>
-  </div>
-</section>
-
-<!-- ─── HOW IT WORKS ─────────────────────────── -->
-<section id="how">
-  <div class="section-head reveal">
-    <div class="section-tag">Process</div>
-    <h2 class="section-title">HOW IT WORKS</h2>
-    <p class="section-sub">Three simple steps. Zero technical knowledge required. Anyone can use it.</p>
-  </div>
-  <div class="how-grid reveal">
-    <div class="how-card">
-      <div class="how-step">01</div>
-      <div class="how-icon">📋</div>
-      <h3>Paste Your Content</h3>
-      <p>Copy the suspicious message, URL, email, or any text you've received and paste it into our scanner box.</p>
-    </div>
-    <div class="how-card">
-      <div class="how-step">02</div>
-      <div class="how-icon">🤖</div>
-      <h3>AI Analyzes It</h3>
-      <p>Our machine learning model scans for scam patterns, phishing keywords, suspicious URLs, and social engineering tactics.</p>
-    </div>
-    <div class="how-card">
-      <div class="how-step">03</div>
-      <div class="how-icon">✅</div>
-      <h3>Get Your Verdict</h3>
-      <p>Receive an instant risk level — High, Medium, or Low — along with a probability score and actionable safety advice.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ─── SCANNER TOOL ──────────────────────────── -->
-<section id="scanner">
-  <div style="max-width:900px; margin:0 auto;">
-    <div class="section-head reveal" style="text-align:center;">
-      <div class="section-tag" style="justify-content:center;">Live Tool</div>
-      <h2 class="section-title">SCAN RIGHT NOW</h2>
-      <p class="section-sub" style="margin:0 auto;">Paste anything suspicious below. Results appear instantly.</p>
-    </div>
-
-    <div class="scanner-wrap reveal">
-      <div class="scanner-corner-tr"></div>
-      <div class="scanner-corner-bl"></div>
-      <div class="scanner-beam" id="scannerBeam"></div>
-
-      <div class="scanner-topbar">
-        <div class="topbar-dots">
-          <div class="topbar-dot dot-r"></div>
-          <div class="topbar-dot dot-y"></div>
-          <div class="topbar-dot dot-g"></div>
-        </div>
-        <div class="topbar-title">scamshield — threat-analyzer v2.0</div>
-        <div class="topbar-status">
-          <div class="status-dot"></div>
-          ONLINE
-        </div>
+  <!-- ─── SCANNER TOOL ──────────────────────────── -->
+  <section id="scanner">
+    <div style="max-width:900px; margin:0 auto;">
+      <div class="section-head reveal" style="text-align:center;">
+        <div class="section-tag" style="justify-content:center;">Live Tool</div>
+        <h2 class="section-title">SCAN RIGHT NOW</h2>
+        <p class="section-sub" style="margin:0 auto;">Paste anything suspicious below. Results appear instantly.</p>
       </div>
 
-      <div class="scanner-body">
-        <div class="scan-input-wrap">
-          <div class="scan-label">
-            <span class="scan-label-text">Input Content</span>
-            <span id="charCount">0 chars</span>
+      <div class="scanner-wrap reveal">
+        <div class="scanner-corner-tr"></div>
+        <div class="scanner-corner-bl"></div>
+        <div class="scanner-beam" id="scannerBeam"></div>
+
+        <div class="scanner-topbar">
+          <div class="topbar-dots">
+            <div class="topbar-dot dot-r"></div>
+            <div class="topbar-dot dot-y"></div>
+            <div class="topbar-dot dot-g"></div>
           </div>
-          <textarea id="inputText" placeholder="e.g. 'You've won ₹10 Lakh! Click the link to claim: bit.ly/claimprize123 — Offer expires in 24 hours!'"></textarea>
+          <div class="topbar-title">scamshield — threat-analyzer v2.0</div>
+          <div class="topbar-status">
+            <div class="status-dot"></div>
+            ONLINE
+          </div>
         </div>
 
-        <div class="scan-options">
-          <div class="scan-opt active" onclick="setType(this,'message')"><span>💬 Message</span></div>
-          <div class="scan-opt" onclick="setType(this,'url')"><span>🔗 URL / Link</span></div>
-          <div class="scan-opt" onclick="setType(this,'email')"><span>📧 Email</span></div>
-          <div class="scan-opt" onclick="setType(this,'sms')"><span>📱 SMS</span></div>
-        </div>
-
-        <div class="scan-actions">
-          <button class="scan-btn" id="scanBtn" onclick="checkScam()">
-            <span id="btnDefault" style="display:flex;align-items:center;gap:0.6rem;">
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1.5C4.41 1.5 1.5 4.41 1.5 8s2.91 6.5 6.5 6.5S14.5 11.59 14.5 8 11.59 1.5 8 1.5z" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3l2.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-              ANALYZE RISK
-            </span>
-            <span id="btnLoading" class="hidden" style="display:none;align-items:center;gap:0.6rem;">
-              <svg class="spin" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-dasharray="18 18" stroke-linecap="round"/></svg>
-              SCANNING...
-            </span>
-          </button>
-          <button class="clear-btn" onclick="clearInput()">CLEAR</button>
-        </div>
-
-        <div id="result" class="hidden">
-          <div class="result-top">
-            <div class="result-emoji" id="rEmoji"></div>
-            <div class="result-info">
-              <div class="result-sublabel">Risk Assessment</div>
-              <div class="result-name" id="rName"></div>
+        <div class="scanner-body">
+          <div class="scan-input-wrap">
+            <div class="scan-label">
+              <span class="scan-label-text">Input Content</span>
+              <span id="charCount">0 chars</span>
             </div>
-            <div class="result-chip" id="rChip"></div>
+            <textarea id="inputText"
+              placeholder="e.g. 'You've won ₹10 Lakh! Click the link to claim: bit.ly/claimprize123 — Offer expires in 24 hours!'"></textarea>
           </div>
-          <div class="result-bar-section">
-            <div class="bar-labels"><span>SAFE</span><span>MEDIUM</span><span>DANGER</span></div>
-            <div class="bar-track"><div class="bar-fill" id="rBar"></div></div>
-          </div>
-          <div class="result-body">
-            <div class="result-prob" id="rProb"></div>
-            <div class="result-desc" id="rDesc"></div>
-            <div class="result-tip" id="rTip"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- ─── FEATURES ──────────────────────────────── -->
-<section id="features">
-  <div class="features-layout">
-    <div>
-      <div class="section-head reveal">
-        <div class="section-tag">Capabilities</div>
-        <h2 class="section-title">WHY<br>SCAMSHIELD?</h2>
-        <p class="section-sub">Built with modern AI and designed for everyone — not just security experts.</p>
-      </div>
-      <div class="features-list reveal">
-        <div class="feature-item">
-          <div class="feature-icon">⚡</div>
-          <div class="feature-text">
-            <h4>Instant Analysis</h4>
-            <p>Results in under 1 second. No waiting, no loading screens — just instant answers when you need them most.</p>
+          <div class="scan-options">
+            <div class="scan-opt active" onclick="setType(this,'message')"><span>💬 Message</span></div>
+            <div class="scan-opt" onclick="setType(this,'url')"><span>🔗 URL / Link</span></div>
+            <div class="scan-opt" onclick="setType(this,'email')"><span>📧 Email</span></div>
+            <div class="scan-opt" onclick="setType(this,'sms')"><span>📱 SMS</span></div>
+          </div>
+
+          <div class="scan-actions">
+            <button class="scan-btn" id="scanBtn" onclick="checkScam()">
+              <span id="btnDefault" style="display:flex;align-items:center;gap:0.6rem;">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <path d="M8 1.5C4.41 1.5 1.5 4.41 1.5 8s2.91 6.5 6.5 6.5S14.5 11.59 14.5 8 11.59 1.5 8 1.5z"
+                    stroke="currentColor" stroke-width="1.3" />
+                  <path d="M8 5v3l2.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+                </svg>
+                ANALYZE RISK
+              </span>
+              <span id="btnLoading" class="hidden" style="display:none;align-items:center;gap:0.6rem;">
+                <svg class="spin" width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-dasharray="18 18"
+                    stroke-linecap="round" />
+                </svg>
+                SCANNING...
+              </span>
+            </button>
+            <button class="clear-btn" onclick="clearInput()">CLEAR</button>
+          </div>
+
+          <div id="result" class="hidden">
+            <div class="result-top">
+              <div class="result-emoji" id="rEmoji"></div>
+              <div class="result-info">
+                <div class="result-sublabel">Risk Assessment</div>
+                <div class="result-name" id="rName"></div>
+              </div>
+              <div class="result-chip" id="rChip"></div>
+            </div>
+            <div class="result-bar-section">
+              <div class="bar-labels"><span>SAFE</span><span>MEDIUM</span><span>DANGER</span></div>
+              <div class="bar-track">
+                <div class="bar-fill" id="rBar"></div>
+              </div>
+            </div>
+            <div class="result-body">
+              <div class="result-prob" id="rProb"></div>
+              <div class="result-desc" id="rDesc"></div>
+              <div class="result-tip" id="rTip"></div>
+            </div>
           </div>
         </div>
-        <div class="feature-item">
-          <div class="feature-icon">🧠</div>
-          <div class="feature-text">
-            <h4>AI & ML Powered</h4>
-            <p>Trained on thousands of real scam examples. Understands context, tone, urgency tactics, and suspicious patterns.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FEATURES ──────────────────────────────── -->
+  <section id="features">
+    <div class="features-layout">
+      <div>
+        <div class="section-head reveal">
+          <div class="section-tag">Capabilities</div>
+          <h2 class="section-title">WHY<br>SCAMSHIELD?</h2>
+          <p class="section-sub">Built with modern AI and designed for everyone — not just security experts.</p>
+        </div>
+        <div class="features-list reveal">
+          <div class="feature-item">
+            <div class="feature-icon">⚡</div>
+            <div class="feature-text">
+              <h4>Instant Analysis</h4>
+              <p>Results in under 1 second. No waiting, no loading screens — just instant answers when you need them
+                most.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🧠</div>
+            <div class="feature-text">
+              <h4>AI & ML Powered</h4>
+              <p>Trained on thousands of real scam examples. Understands context, tone, urgency tactics, and suspicious
+                patterns.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🔒</div>
+            <div class="feature-text">
+              <h4>Privacy First</h4>
+              <p>Your input is never stored or logged. Every scan is completely anonymous and deleted after processing.
+              </p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🌐</div>
+            <div class="feature-text">
+              <h4>Multi-Type Detection</h4>
+              <p>Handles SMS, emails, URLs, WhatsApp messages, fake job offers, phishing links, and more.</p>
+            </div>
           </div>
         </div>
-        <div class="feature-item">
-          <div class="feature-icon">🔒</div>
-          <div class="feature-text">
-            <h4>Privacy First</h4>
-            <p>Your input is never stored or logged. Every scan is completely anonymous and deleted after processing.</p>
+      </div>
+      <div class="features-visual reveal">
+        <div class="vc-pulse"></div>
+        <div class="vc-pulse"></div>
+        <div class="vc-pulse"></div>
+        <div class="visual-card vc-tl">
+          <div class="vc-mini-label">Recent Scans</div>
+          <div class="vc-mini-row"><span><span class="dot-red"></span> &nbsp;Prize Scam</span><span
+              style="color:var(--danger)">HIGH</span></div>
+          <div class="vc-mini-row"><span><span class="dot-ylw"></span> &nbsp;Bank Alert</span><span
+              style="color:var(--warn)">MED</span></div>
+          <div class="vc-mini-row"><span><span class="dot-grn"></span> &nbsp;Job Offer</span><span
+              style="color:var(--safe)">SAFE</span></div>
+        </div>
+        <div class="visual-card vc-main">
+          <div class="vc-label">Risk Score</div>
+          <div class="vc-score">12%</div>
+          <div class="vc-bar">
+            <div class="vc-bar-fill"></div>
           </div>
+          <div class="vc-chip">✓ &nbsp; Content appears safe</div>
         </div>
-        <div class="feature-item">
-          <div class="feature-icon">🌐</div>
-          <div class="feature-text">
-            <h4>Multi-Type Detection</h4>
-            <p>Handles SMS, emails, URLs, WhatsApp messages, fake job offers, phishing links, and more.</p>
-          </div>
+        <div class="visual-card vc-br">
+          <div class="vc-mini-label">Detection Rate</div>
+          <div class="vc-mini-row"><span>Phishing URLs</span><span style="color:var(--accent)">98.7%</span></div>
+          <div class="vc-mini-row"><span>SMS Scams</span><span style="color:var(--accent)">99.1%</span></div>
+          <div class="vc-mini-row"><span>Fake Offers</span><span style="color:var(--accent)">97.4%</span></div>
         </div>
       </div>
     </div>
-    <div class="features-visual reveal">
-      <div class="vc-pulse"></div>
-      <div class="vc-pulse"></div>
-      <div class="vc-pulse"></div>
-      <div class="visual-card vc-tl">
-        <div class="vc-mini-label">Recent Scans</div>
-        <div class="vc-mini-row"><span><span class="dot-red"></span> &nbsp;Prize Scam</span><span style="color:var(--danger)">HIGH</span></div>
-        <div class="vc-mini-row"><span><span class="dot-ylw"></span> &nbsp;Bank Alert</span><span style="color:var(--warn)">MED</span></div>
-        <div class="vc-mini-row"><span><span class="dot-grn"></span> &nbsp;Job Offer</span><span style="color:var(--safe)">SAFE</span></div>
-      </div>
-      <div class="visual-card vc-main">
-        <div class="vc-label">Risk Score</div>
-        <div class="vc-score">12%</div>
-        <div class="vc-bar"><div class="vc-bar-fill"></div></div>
-        <div class="vc-chip">✓ &nbsp; Content appears safe</div>
-      </div>
-      <div class="visual-card vc-br">
-        <div class="vc-mini-label">Detection Rate</div>
-        <div class="vc-mini-row"><span>Phishing URLs</span><span style="color:var(--accent)">98.7%</span></div>
-        <div class="vc-mini-row"><span>SMS Scams</span><span style="color:var(--accent)">99.1%</span></div>
-        <div class="vc-mini-row"><span>Fake Offers</span><span style="color:var(--accent)">97.4%</span></div>
-      </div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- ─── STATS + TESTIMONIALS ─────────────────── -->
-<section id="stats">
-  <div class="stats-grid reveal">
-    <div class="stat-card">
-      <div class="stat-val" data-target="50">0</div>
-      <div class="stat-label">K+ Scams Detected</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" data-target="99.2" data-suffix="%">0</div>
-      <div class="stat-label">Accuracy Rate</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val">&lt;1s</div>
-      <div class="stat-label">Avg Response Time</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" data-target="12">0</div>
-      <div class="stat-label">K+ Users Protected</div>
-    </div>
-  </div>
-
-  <div class="section-head reveal" style="text-align:center;">
-    <div class="section-tag" style="justify-content:center;">Testimonials</div>
-    <h2 class="section-title">WHAT PEOPLE SAY</h2>
-  </div>
-
-  <div class="testi-grid reveal">
-    <div class="testi-card">
-      <div class="testi-stars">★★★★★</div>
-      <p class="testi-text">"I got a message saying I won a lottery. ScamShield flagged it as High Risk in 0.3 seconds. Saved me from losing money."</p>
-      <div class="testi-author">
-        <div class="testi-avatar">R</div>
-        <div>
-          <div class="testi-name">Ravi Sharma</div>
-          <div class="testi-role">Student · Delhi</div>
-        </div>
+  <!-- ─── STATS + TESTIMONIALS ─────────────────── -->
+  <section id="stats">
+    <div class="stats-grid reveal">
+      <div class="stat-card">
+        <div class="stat-val" data-target="20">0</div>
+        <div class="stat-label">K+ Scams Detected</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" data-target="95.2" data-suffix="%">0</div>
+        <div class="stat-label">Accuracy Rate</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">&lt;1s</div>
+        <div class="stat-label">Avg Response Time</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" data-target="12">0</div>
+        <div class="stat-label">K+ Users Protected</div>
       </div>
     </div>
-    <div class="testi-card">
-      <div class="testi-stars">★★★★★</div>
-      <p class="testi-text">"My elderly mother got a phishing SMS. I scanned it here and showed her the result. She understood immediately. Great tool!"</p>
-      <div class="testi-author">
-        <div class="testi-avatar">P</div>
-        <div>
-          <div class="testi-name">Priya Nair</div>
-          <div class="testi-role">Software Engineer · Bangalore</div>
-        </div>
-      </div>
-    </div>
-    <div class="testi-card">
-      <div class="testi-stars">★★★★☆</div>
-      <p class="testi-text">"Super fast and accurate. I use it every time I get a suspicious job offer or unknown link. Has saved me multiple times already."</p>
-      <div class="testi-author">
-        <div class="testi-avatar">A</div>
-        <div>
-          <div class="testi-name">Arjun Mehta</div>
-          <div class="testi-role">Freelancer · Mumbai</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- ─── CONTACT ────────────────────────────────── -->
-<section id="contact">
-  <div class="contact-layout">
-    <div class="reveal">
-      <div class="section-tag">Get In Touch</div>
-      <h2 class="section-title">CONTACT US</h2>
-      <p class="section-sub">Have a question, found a bug, or want to report a scam type we're missing? We'd love to hear from you.</p>
-      <div class="contact-info-list">
-        <div class="contact-info-item">
-          <div class="ci-icon">📧</div>
+    <div class="section-head reveal" style="text-align:center;">
+      <div class="section-tag" style="justify-content:center;">Testimonials</div>
+      <h2 class="section-title">WHAT PEOPLE SAY</h2>
+    </div>
+
+    <div class="testi-grid reveal">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"I got a message saying I won a lottery. ScamShield flagged it as High Risk in 0.3
+          seconds. Saved me from losing money."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">R</div>
           <div>
-            <div class="ci-label">Email</div>
-            <div class="ci-value">support@scamshield.ai</div>
+            <div class="testi-name">Sujal Das</div>
+            <div class="testi-role">Student · Durgapur</div>
           </div>
         </div>
-        <div class="contact-info-item">
-          <div class="ci-icon">🐙</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★☆</div>
+        <p class="testi-text">"My elderly mother got a phishing SMS. I scanned it here and showed her the result. She
+          understood immediately. Great tool!"</p>
+        <div class="testi-author">
+          <div class="testi-avatar">P</div>
           <div>
-            <div class="ci-label">GitHub</div>
-            <div class="ci-value">github.com/Shantanu0015</div>
+            <div class="testi-name">Kumar Prakhar</div>
+            <div class="testi-role">Software Engineer · Bhubaneswar</div>
           </div>
         </div>
-        <div class="contact-info-item">
-          <div class="ci-icon">⚡</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★☆</div>
+        <p class="testi-text">"Super fast and accurate. I use it every time I get a suspicious job offer or unknown
+          link. Has saved me multiple times already."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">A</div>
           <div>
-            <div class="ci-label">Response Time</div>
-            <div class="ci-value">Usually within 24 hours</div>
+            <div class="testi-name">Shashank Raman</div>
+            <div class="testi-role">Freelancer · Bhopal</div>
           </div>
         </div>
       </div>
     </div>
-    <div class="contact-form reveal">
-      <div class="form-row">
+  </section>
+
+  <!-- ─── CONTACT ────────────────────────────────── -->
+  <section id="contact">
+    <div class="contact-layout">
+      <div class="reveal">
+        <div class="section-tag">Get In Touch</div>
+        <h2 class="section-title">CONTACT US</h2>
+        <p class="section-sub">Have a question, found a bug, or want to report a scam type we're missing? We'd love to
+          hear from you.</p>
+        <div class="contact-info-list">
+          <div class="contact-info-item">
+            <div class="ci-icon">📧</div>
+            <div>
+              <div class="ci-label">Email</div>
+              <div class="ci-value">aditya22may2004@gmail.com</div>
+            </div>
+          </div>
+          <div class="contact-info-item">
+            <div class="ci-icon">🐙</div>
+            <div>
+              <div class="ci-label">GitHub</div>
+              <div class="ci-value">github.com/dityakp</div>
+            </div>
+          </div>
+          <div class="contact-info-item">
+            <div class="ci-icon">⚡</div>
+            <div>
+              <div class="ci-label">Response Time</div>
+              <div class="ci-value">Usually within 24 hours</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form reveal">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-input" placeholder="Your name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" placeholder="your@email.com">
+          </div>
+        </div>
         <div class="form-group">
-          <label class="form-label">Name</label>
-          <input type="text" class="form-input" placeholder="Your name">
+          <label class="form-label">Subject</label>
+          <input type="text" class="form-input" placeholder="Bug report, feature request...">
         </div>
         <div class="form-group">
-          <label class="form-label">Email</label>
-          <input type="email" class="form-input" placeholder="your@email.com">
+          <label class="form-label">Message</label>
+          <textarea class="form-textarea" placeholder="Tell us more..."></textarea>
         </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="submitContact(this)">SEND
+          MESSAGE</button>
       </div>
-      <div class="form-group">
-        <label class="form-label">Subject</label>
-        <input type="text" class="form-input" placeholder="Bug report, feature request...">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Message</label>
-        <textarea class="form-textarea" placeholder="Tell us more..."></textarea>
-      </div>
-      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="submitContact(this)">SEND MESSAGE</button>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ─── FOOTER ────────────────────────────────── -->
-<footer>
-  <div class="footer-brand">
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path d="M8 1L2 3.5V8C2 11.5 4.7 14.8 8 15.5C11.3 14.8 14 11.5 14 8V3.5L8 1Z" stroke="#00e5ff" stroke-width="1.2" fill="none"/>
-    </svg>
-    Scam<span>Shield</span>
-  </div>
-  <p>© 2026 ScamShield · Built by Shantanu Sarkar · Stay safe online.</p>
-  <div class="footer-links">
-    <a href="#hero">Home</a>
-    <a href="#scanner">Scanner</a>
-    <a href="#features">Features</a>
-    <a href="#contact">Contact</a>
-  </div>
-</footer>
+  <!-- ─── FOOTER ────────────────────────────────── -->
+  <footer>
+    <div class="footer-brand">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M8 1L2 3.5V8C2 11.5 4.7 14.8 8 15.5C11.3 14.8 14 11.5 14 8V3.5L8 1Z" stroke="#00e5ff"
+          stroke-width="1.2" fill="none" />
+      </svg>
+      Scam<span>Shield</span>
+    </div>
+    <p>© 2026 ScamShield · All Rights Reserved · Stay safe online.</p>
+    <div class="footer-links">
+      <a href="#hero">Home</a>
+      <a href="#scanner">Scanner</a>
+      <a href="#features">Features</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </footer>
 
   <script src="js/main.js"></script>
 </body>
+
 </html>
-
-
