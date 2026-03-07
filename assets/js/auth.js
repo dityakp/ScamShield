@@ -1,8 +1,12 @@
-﻿// ScamShield authentication & shared UI helpers
-// Handles: navigation, year, spinner & toast + login/register form validation and placeholders for /login and /register.
+// ScamShield authentication & shared UI helpers
+// Handles: navigation, year, spinner & toast + login/register form validation
+// Connected to real /api/login and /api/register backend endpoints.
 
 (function () {
   const global = (window.ScamShield = window.ScamShield || {});
+
+  // ── Backend base URL (change in production) ──
+  const API_BASE = window.SCAMSHIELD_API_BASE || 'http://127.0.0.1:8000';
 
   function $(id) {
     return document.getElementById(id);
@@ -79,6 +83,7 @@
     }
   }
 
+  global.API_BASE = API_BASE;
   global.initCommonUI = function () {
     initNav();
     initYear();
@@ -192,36 +197,47 @@
 
     showSpinner();
 
-    // Placeholder: connect to /login backend API
-    // fetch('/login', { method: 'POST', body: JSON.stringify({ email: email.value, password: password.value }) })
-    //   .then(...)
+    fetch(API_BASE + '/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email.value.trim(), password: password.value }),
+    })
+      .then(function (res) {
+        if (!res.ok) {
+          return res.json().then(function (err) {
+            throw new Error(err.detail || 'Login failed.');
+          });
+        }
+        return res.json();
+      })
+      .then(function (data) {
+        hideSpinner();
 
-    setTimeout(function () {
-      hideSpinner();
+        // Store token + user data
+        try {
+          window.localStorage.setItem('scamshieldToken', data.access_token);
+          window.localStorage.setItem(
+            'scamshieldUser',
+            JSON.stringify(data.user)
+          );
+        } catch (err) {
+          // Storage error
+        }
 
-      // Store a demo "logged-in" user in localStorage
-      try {
-        window.localStorage.setItem(
-          'scamshieldUser',
-          JSON.stringify({
-            email: email.value.trim(),
-            name: email.value.split('@')[0],
-          })
-        );
-      } catch (err) {
-        // Ignore storage errors in demo mode
-      }
+        showToast({
+          type: 'success',
+          title: 'Login successful',
+          message: 'Redirecting to your dashboard.',
+        });
 
-      showToast({
-        type: 'success',
-        title: 'Login successful (demo)',
-        message: 'Redirecting to your dashboard.',
+        setTimeout(function () {
+          window.location.href = 'dashboard.html';
+        }, 900);
+      })
+      .catch(function (err) {
+        hideSpinner();
+        generalError.textContent = err.message || 'An error occurred. Please try again.';
       });
-
-      setTimeout(function () {
-        window.location.href = 'dashboard.html';
-      }, 900);
-    }, 800);
   }
 
   function handleRegisterSubmit(e) {
@@ -277,35 +293,44 @@
 
     showSpinner();
 
-    // Placeholder: connect to /register backend API
-    // fetch('/register', { method: 'POST', body: JSON.stringify({ name: ..., email: ..., password: ... }) })
-    //   .then(...)
+    fetch(API_BASE + '/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: name.value.trim(),
+        email: email.value.trim(),
+        password: password.value,
+      }),
+    })
+      .then(function (res) {
+        if (!res.ok) {
+          return res.json().then(function (err) {
+            throw new Error(err.detail || 'Registration failed.');
+          });
+        }
+        return res.json();
+      })
+      .then(function (data) {
+        hideSpinner();
 
-    setTimeout(function () {
-      hideSpinner();
+        showToast({
+          type: 'success',
+          title: 'Account created',
+          message: 'You can now log in and explore the dashboard.',
+        });
 
-      try {
-        window.localStorage.setItem(
-          'scamshieldUser',
-          JSON.stringify({
-            email: email.value.trim(),
-            name: name.value.trim(),
-          })
-        );
-      } catch (err) {
-        // Ignore storage errors in demo mode
-      }
-
-      showToast({
-        type: 'success',
-        title: 'Account created (demo)',
-        message: 'You can now log in and explore the dashboard.',
+        setTimeout(function () {
+          window.location.href = 'login.html';
+        }, 900);
+      })
+      .catch(function (err) {
+        hideSpinner();
+        showToast({
+          type: 'error',
+          title: 'Registration failed',
+          message: err.message || 'An error occurred. Please try again.',
+        });
       });
-
-      setTimeout(function () {
-        window.location.href = 'login.html';
-      }, 900);
-    }, 900);
   }
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -331,4 +356,3 @@
     }
   });
 })();
-

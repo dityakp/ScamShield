@@ -1,8 +1,12 @@
 // ScamShield dashboard logic
-// Handles: navigation, year, spinner & toast + populating dummy scan/report history and logout flow.
+// Handles: navigation, year, spinner & toast + fetching real scan/report history and logout flow.
+// Connected to real /api/history, /api/report, and /api/logout backend endpoints.
 
 (function () {
     const global = (window.ScamShield = window.ScamShield || {});
+
+    // ── Backend base URL ──
+    const API_BASE = window.SCAMSHIELD_API_BASE || 'http://127.0.0.1:8000';
 
     function $(id) {
         return document.getElementById(id);
@@ -39,6 +43,14 @@
             return !!window.localStorage.getItem('scamshieldUser');
         } catch (err) {
             return false;
+        }
+    }
+
+    function getAuthToken() {
+        try {
+            return window.localStorage.getItem('scamshieldToken') || '';
+        } catch (err) {
+            return '';
         }
     }
 
@@ -87,6 +99,7 @@
         }
     }
 
+    global.API_BASE = API_BASE;
     global.initCommonUI = function () {
         initNav();
         initYear();
@@ -120,131 +133,123 @@
         const tbody = $('scanHistoryBody');
         if (!tbody) return;
 
-        const dummyScans = [
-            {
-                date: '2026-03-01 10:32',
-                type: 'SMS',
-                snippet: 'Your bank account will be suspended in 24 hours...',
-                risk: 'High',
-                score: 87,
+        var token = getAuthToken();
+
+        fetch(API_BASE + '/api/history', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token,
             },
-            {
-                date: '2026-02-28 21:10',
-                type: 'Email',
-                snippet: 'You have won a lottery worth ₹50,00,000...',
-                risk: 'High',
-                score: 91,
-            },
-            {
-                date: '2026-02-27 16:45',
-                type: 'URL',
-                snippet: 'https://kyc-update-secure-payments.com',
-                risk: 'Medium',
-                score: 68,
-            },
-            {
-                date: '2026-02-26 09:12',
-                type: 'WhatsApp',
-                snippet: 'Hi sir, I am from customer support. Please share OTP...',
-                risk: 'High',
-                score: 94,
-            },
-            {
-                date: '2026-02-25 18:03',
-                type: 'URL',
-                snippet: 'https://official-bank.example.com',
-                risk: 'Low',
-                score: 18,
-            },
-        ];
+        })
+            .then(function (res) {
+                if (!res.ok) throw new Error('Failed to load scan history.');
+                return res.json();
+            })
+            .then(function (scans) {
+                tbody.innerHTML = '';
 
-        tbody.innerHTML = '';
-        dummyScans.forEach(function (scan) {
-            const tr = document.createElement('tr');
+                if (scans.length === 0) {
+                    var tr = document.createElement('tr');
+                    var td = document.createElement('td');
+                    td.colSpan = 5;
+                    td.textContent = 'No scans yet. Go to the Scan page to analyze a message.';
+                    td.style.textAlign = 'center';
+                    td.style.opacity = '0.6';
+                    tr.appendChild(td);
+                    tbody.appendChild(tr);
+                    return;
+                }
 
-            const tdDate = document.createElement('td');
-            tdDate.textContent = scan.date;
+                scans.forEach(function (scan) {
+                    var tr = document.createElement('tr');
 
-            const tdType = document.createElement('td');
-            tdType.textContent = scan.type;
+                    var tdDate = document.createElement('td');
+                    tdDate.textContent = scan.date;
 
-            const tdSnippet = document.createElement('td');
-            tdSnippet.textContent = scan.snippet;
+                    var tdType = document.createElement('td');
+                    tdType.textContent = scan.type;
 
-            const tdRisk = document.createElement('td');
-            const tag = document.createElement('span');
-            tag.className =
-                'tag ' +
-                (scan.risk === 'High' ? 'tag-high' : scan.risk === 'Medium' ? 'tag-medium' : 'tag-low');
-            tag.textContent = scan.risk;
-            tdRisk.appendChild(tag);
+                    var tdSnippet = document.createElement('td');
+                    tdSnippet.textContent = scan.snippet;
 
-            const tdScore = document.createElement('td');
-            tdScore.textContent = scan.score + '%';
+                    var tdRisk = document.createElement('td');
+                    var tag = document.createElement('span');
+                    tag.className =
+                        'tag ' +
+                        (scan.risk === 'High' ? 'tag-high' : scan.risk === 'Medium' ? 'tag-medium' : 'tag-low');
+                    tag.textContent = scan.risk;
+                    tdRisk.appendChild(tag);
 
-            tr.appendChild(tdDate);
-            tr.appendChild(tdType);
-            tr.appendChild(tdSnippet);
-            tr.appendChild(tdRisk);
-            tr.appendChild(tdScore);
-            tbody.appendChild(tr);
-        });
+                    var tdScore = document.createElement('td');
+                    tdScore.textContent = scan.score + '%';
 
-        // Placeholder: replace dummyScans with data from /history
-        // fetch('/history')
-        //   .then(res => res.json())
-        //   .then(scans => { ... });
+                    tr.appendChild(tdDate);
+                    tr.appendChild(tdType);
+                    tr.appendChild(tdSnippet);
+                    tr.appendChild(tdRisk);
+                    tr.appendChild(tdScore);
+                    tbody.appendChild(tr);
+                });
+            })
+            .catch(function (err) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;opacity:0.6">Could not load scan history.</td></tr>';
+            });
     }
 
     function populateReportHistory() {
         const list = $('reportHistoryList');
         if (!list) return;
 
-        const dummyReports = [
-            {
-                type: 'Phishing (Bank / UPI / KYC)',
-                channel: 'SMS',
-                when: 'Today · 10:20',
+        var token = getAuthToken();
+
+        fetch(API_BASE + '/api/report', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token,
             },
-            {
-                type: 'Investment / trading scam',
-                channel: 'Telegram',
-                when: 'Yesterday · 19:05',
-            },
-            {
-                type: 'Fake customer support',
-                channel: 'Phone call',
-                when: '2 days ago · 14:33',
-            },
-        ];
+        })
+            .then(function (res) {
+                if (!res.ok) throw new Error('Failed to load report history.');
+                return res.json();
+            })
+            .then(function (reports) {
+                list.innerHTML = '';
 
-        list.innerHTML = '';
-        dummyReports.forEach(function (report) {
-            const item = document.createElement('div');
-            item.className = 'history-item';
+                if (reports.length === 0) {
+                    var empty = document.createElement('div');
+                    empty.style.textAlign = 'center';
+                    empty.style.opacity = '0.6';
+                    empty.style.padding = '1rem';
+                    empty.textContent = 'No reports yet. Help the community by reporting scams.';
+                    list.appendChild(empty);
+                    return;
+                }
 
-            const meta = document.createElement('div');
-            meta.className = 'history-meta';
-            const title = document.createElement('div');
-            title.textContent = report.type;
-            const channel = document.createElement('span');
-            channel.textContent = 'Channel: ' + report.channel;
-            meta.appendChild(title);
-            meta.appendChild(channel);
+                reports.forEach(function (report) {
+                    var item = document.createElement('div');
+                    item.className = 'history-item';
 
-            const time = document.createElement('div');
-            time.className = 'history-time';
-            time.textContent = report.when;
+                    var meta = document.createElement('div');
+                    meta.className = 'history-meta';
+                    var title = document.createElement('div');
+                    title.textContent = report.type;
+                    var channel = document.createElement('span');
+                    channel.textContent = 'Channel: ' + report.channel;
+                    meta.appendChild(title);
+                    meta.appendChild(channel);
 
-            item.appendChild(meta);
-            item.appendChild(time);
-            list.appendChild(item);
-        });
+                    var time = document.createElement('div');
+                    time.className = 'history-time';
+                    time.textContent = report.when;
 
-        // Placeholder: replace dummyReports with data from /report or /history
-        // fetch('/report')
-        //   .then(res => res.json())
-        //   .then(reports => { ... });
+                    item.appendChild(meta);
+                    item.appendChild(time);
+                    list.appendChild(item);
+                });
+            })
+            .catch(function (err) {
+                list.innerHTML = '<div style="text-align:center;opacity:0.6;padding:1rem">Could not load report history.</div>';
+            });
     }
 
     function setupLogout() {
@@ -253,28 +258,39 @@
 
         logoutBtn.addEventListener('click', function () {
             showSpinner();
+            var token = getAuthToken();
 
-            // Placeholder: call /logout backend if needed
-            // fetch('/logout', { method: 'POST' }).then(...)
+            fetch(API_BASE + '/api/logout', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                },
+            })
+                .then(function () {
+                    // Always clear local state regardless of response
+                })
+                .catch(function () {
+                    // Continue with logout even on error
+                })
+                .finally(function () {
+                    hideSpinner();
+                    try {
+                        window.localStorage.removeItem('scamshieldUser');
+                        window.localStorage.removeItem('scamshieldToken');
+                    } catch (err) {
+                        // Ignore storage errors
+                    }
 
-            setTimeout(function () {
-                hideSpinner();
-                try {
-                    window.localStorage.removeItem('scamshieldUser');
-                } catch (err) {
-                    // Ignore storage errors in demo
-                }
+                    showToast({
+                        type: 'info',
+                        title: 'Logged out',
+                        message: 'You have been signed out of the dashboard.',
+                    });
 
-                showToast({
-                    type: 'info',
-                    title: 'Logged out (demo)',
-                    message: 'You have been signed out of the dashboard.',
+                    setTimeout(function () {
+                        window.location.href = 'login.html';
+                    }, 800);
                 });
-
-                setTimeout(function () {
-                    window.location.href = 'login.html';
-                }, 800);
-            }, 700);
         });
     }
 
@@ -292,4 +308,3 @@
         setupLogout();
     });
 })();
-

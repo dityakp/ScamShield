@@ -1,8 +1,12 @@
 // ScamShield scan & shared UI logic
-// Handles: navigation toggle, year, loading spinner, toast notifications and the Scan page dummy /predict flow.
+// Handles: navigation toggle, year, loading spinner, toast notifications and the Scan page.
+// Connected to real /api/predict backend endpoint.
 
 (function () {
     const global = (window.ScamShield = window.ScamShield || {});
+
+    // ── Backend base URL ──
+    const API_BASE = window.SCAMSHIELD_API_BASE || 'http://127.0.0.1:8000';
 
     function $(id) {
         return document.getElementById(id);
@@ -39,6 +43,14 @@
             return !!window.localStorage.getItem('scamshieldUser');
         } catch (err) {
             return false;
+        }
+    }
+
+    function getAuthToken() {
+        try {
+            return window.localStorage.getItem('scamshieldToken') || '';
+        } catch (err) {
+            return '';
         }
     }
 
@@ -88,6 +100,7 @@
     }
 
     // Expose shared helpers for other pages
+    global.API_BASE = API_BASE;
     global.initCommonUI = function () {
         initNav();
         initYear();
@@ -95,69 +108,42 @@
     global.showSpinner = showSpinner;
     global.hideSpinner = hideSpinner;
     global.showToast = showToast;
+    global.getAuthToken = getAuthToken;
 
-    // Dummy AI prediction to simulate /predict backend response
-    function simulatePredictApi(payload) {
+    // ── Real API call to /api/predict ──
+    function callPredictApi(payload) {
         showSpinner();
-        return new Promise(function (resolve) {
-            setTimeout(function () {
-                const text = (payload && payload.text) || '';
-                const lowered = text.toLowerCase();
-                const indicators = [];
+        var token = getAuthToken();
 
-                function hasWord(word) {
-                    return lowered.indexOf(word) !== -1;
+        return fetch(API_BASE + '/api/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+            },
+            body: JSON.stringify(payload),
+        })
+            .then(function (res) {
+                if (!res.ok) {
+                    return res.text().then(function (text) {
+                        console.error('API Error Response:', text);
+                        try {
+                            const err = JSON.parse(text);
+                            throw new Error(err.detail || 'Prediction failed.');
+                        } catch (e) {
+                            throw new Error('Prediction failed. Status: ' + res.status);
+                        }
+                    });
                 }
-
-                if (hasWord('kyc') || hasWord('account suspension') || hasWord('verification')) {
-                    indicators.push('KYC / verification pressure');
-                }
-                if (hasWord('otp') || hasWord('one time password')) {
-                    indicators.push('OTP harvesting attempt');
-                }
-                if (hasWord('click') || hasWord('tap')) {
-                    indicators.push('Call-to-action clickbait');
-                }
-                if (hasWord('lottery') || hasWord('prize') || hasWord('winner')) {
-                    indicators.push('Unsolicited reward / lottery');
-                }
-                if (hasWord('upi') || hasWord('imps') || hasWord('rtgs')) {
-                    indicators.push('UPI / bank transfer request');
-                }
-
-                let baseScore = Math.min(95, Math.max(5, Math.round(text.length / 4)));
-                if (indicators.length >= 3) {
-                    baseScore = Math.max(baseScore, 80);
-                } else if (indicators.length === 2) {
-                    baseScore = Math.max(baseScore, 60);
-                } else if (indicators.length === 1) {
-                    baseScore = Math.max(baseScore, 45);
-                }
-
-                let level = 'Low';
-                if (baseScore >= 75) level = 'High';
-                else if (baseScore >= 45) level = 'Medium';
-
-                const explanation =
-                    level === 'High'
-                        ? 'Multiple high‑risk patterns detected including urgency, suspicious links and requests for sensitive actions.'
-                        : level === 'Medium'
-                            ? 'Some scam‑like indicators found. Advise the user to independently verify using official channels.'
-                            : 'Limited scam markers detected, but users should still avoid sharing OTPs, passwords or PINs.';
-
-                const response = {
-                    risk_level: level,
-                    risk_score: baseScore,
-                    explanation: explanation,
-                    indicators: indicators,
-                    type: payload.type,
-                    created_at: new Date().toISOString(),
-                };
-
+                return res.json();
+            })
+            .catch(function (error) {
+                console.error('Fetch caught error:', error);
+                throw error;
+            })
+            .finally(function () {
                 hideSpinner();
-                resolve(response);
-            }, 850);
-        });
+            });
     }
 
     function handleScanSubmit(event) {
@@ -179,11 +165,11 @@
         typeError.textContent = '';
         inputError.textContent = '';
 
-        const type = typeEl.value;
+        const rawType = typeEl.value;
         const text = inputEl.value.trim();
         let valid = true;
 
-        if (!type) {
+        if (!rawType) {
             typeError.textContent = 'Please choose what you are scanning.';
             valid = false;
         }
@@ -196,33 +182,46 @@
         }
 
         if (!valid) return;
+        
+        // Map frontend dropdown value to backend regex requirement: ^(message|url|other)$
+        let backendType = 'other';
+        if (rawType.toLowerCase().includes('message')) backendType = 'message';
+        if (rawType.toLowerCase().includes('url')) backendType = 'url';
 
-        const payload = { type: type, text: text };
+        const payload = { type: backendType, text: text };
 
-        simulatePredictApi(payload).then(function (res) {
-            if (!riskPill || !riskLevelText || !riskScoreEl || !explanationEl || !jsonPreview) return;
+        callPredictApi(payload)
+            .then(function (res) {
+                if (!riskPill || !riskLevelText || !riskScoreEl || !explanationEl || !jsonPreview) return;
 
-            riskPill.classList.remove('low', 'medium', 'high');
-            const levelClass = res.risk_level.toLowerCase();
-            if (levelClass === 'low' || levelClass === 'medium' || levelClass === 'high') {
-                riskPill.classList.add(levelClass);
-            }
+                riskPill.classList.remove('low', 'medium', 'high');
+                const levelClass = res.risk_level.toLowerCase();
+                if (levelClass === 'low' || levelClass === 'medium' || levelClass === 'high') {
+                    riskPill.classList.add(levelClass);
+                }
 
-            riskLevelText.textContent = res.risk_level;
-            riskScoreEl.textContent = res.risk_score;
-            explanationEl.textContent = res.explanation;
+                riskLevelText.textContent = res.risk_level;
+                riskScoreEl.textContent = res.risk_score;
+                explanationEl.textContent = res.explanation;
 
-            jsonPreview.textContent = JSON.stringify(res, null, 2);
+                jsonPreview.textContent = JSON.stringify(res, null, 2);
 
-            if (emptyState) emptyState.style.display = 'none';
-            if (resultCard) resultCard.style.display = 'block';
+                if (emptyState) emptyState.style.display = 'none';
+                if (resultCard) resultCard.style.display = 'block';
 
-            showToast({
-                type: res.risk_level === 'High' ? 'error' : res.risk_level === 'Medium' ? 'info' : 'success',
-                title: 'Scan complete',
-                message: 'Risk level: ' + res.risk_level + ' (' + res.risk_score + '%)',
+                showToast({
+                    type: res.risk_level === 'High' ? 'error' : res.risk_level === 'Medium' ? 'info' : 'success',
+                    title: 'Scan complete',
+                    message: 'Risk level: ' + res.risk_level + ' (' + res.risk_score + '%)',
+                });
+            })
+            .catch(function (err) {
+                showToast({
+                    type: 'error',
+                    title: 'Scan failed',
+                    message: err.message || 'Could not reach backend. Is the server running?',
+                });
             });
-        });
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -244,4 +243,3 @@
         }
     });
 })();
-
