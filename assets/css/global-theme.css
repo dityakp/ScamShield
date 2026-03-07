@@ -1,0 +1,434 @@
+/*
+ * ScamShield – global-theme.css
+ * Black · Neon Blue · White theme applied to EVERY page.
+ * Include after style.css in every HTML file.
+ */
+
+/* ── Root palette overrides ─────────────────────── */
+:root {
+    --accent: #00b7ff;
+    --accent-strong: #00d4ff;
+    --gb-bg: rgba(0, 8, 30, 0.55);
+    /* glassmorphism card bg */
+    --gb-border: rgba(0, 183, 255, 0.18);
+    --gb-blur: 14px;
+}
+
+/* ── Base ───────────────────────────────────────── */
+html,
+body {
+    background: #000 !important;
+    color: #e2e8f0;
+}
+
+/* ── Navbar ─────────────────────────────────────── */
+.navbar {
+    background: rgba(0, 0, 0, 0.65) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(0, 183, 255, 0.1) !important;
+    box-shadow: none !important;
+    transition: background .25s ease, box-shadow .25s ease;
+}
+
+.navbar.scrolled {
+    background: rgba(0, 0, 0, 0.96) !important;
+    box-shadow: 0 1px 0 rgba(0, 183, 255, .15), 0 4px 24px rgba(0, 0, 0, .8) !important;
+}
+
+/* Brand neon blue accent */
+.brand-mark {
+    background: linear-gradient(135deg, #0ea5e9 0%, #00d4ff 60%, #0284c7 100%) !important;
+    box-shadow: 0 0 20px rgba(0, 183, 255, .5) !important;
+}
+
+/* Nav links */
+.nav-link {
+    color: rgba(226, 232, 240, .65) !important;
+}
+
+.nav-link:hover {
+    color: #00d4ff !important;
+}
+
+.nav-link.primary {
+    background: linear-gradient(135deg, #0ea5e9, #00d4ff) !important;
+    color: #000 !important;
+    box-shadow: 0 0 18px rgba(0, 183, 255, .45) !important;
+}
+
+/* ── Buttons ────────────────────────────────────── */
+.btn-primary {
+    background: linear-gradient(135deg, #0ea5e9 0%, #00b7ff 50%, #0284c7 100%) !important;
+    color: #000 !important;
+    font-weight: 700 !important;
+    border: none !important;
+    box-shadow: 0 0 0 1px rgba(0, 183, 255, .35), 0 6px 28px rgba(0, 183, 255, .4) !important;
+}
+
+.btn-primary:hover {
+    box-shadow: 0 0 0 1px rgba(0, 183, 255, .7), 0 10px 45px rgba(0, 183, 255, .7) !important;
+    transform: translateY(-2px);
+}
+
+.btn-outline {
+    border-color: rgba(0, 183, 255, .4) !important;
+    color: #00d4ff !important;
+}
+
+.btn-outline:hover {
+    background: rgba(0, 183, 255, .08) !important;
+    border-color: rgba(0, 183, 255, .7) !important;
+    color: #fff !important;
+}
+
+/* ── Cards + any .card element ──────────────────── */
+.card,
+.feature-card,
+.step-card,
+.disclaimer,
+.scan-card,
+.hero-panel,
+.auth-card,
+.scan-layout>*,
+.report-layout>*,
+.dashboard-grid>* {
+    background: var(--gb-bg) !important;
+    backdrop-filter: blur(var(--gb-blur)) !important;
+    -webkit-backdrop-filter: blur(var(--gb-blur)) !important;
+    border: 1px solid var(--gb-border) !important;
+    box-shadow: 0 0 40px rgba(0, 183, 255, .06), 0 20px 50px rgba(0, 0, 0, .5) !important;
+}
+
+.card:hover,
+.feature-card:hover,
+.step-card:hover {
+    border-color: rgba(0, 183, 255, .35) !important;
+    box-shadow: 0 0 50px rgba(0, 183, 255, .1), 0 24px 60px rgba(0, 0, 0, .55) !important;
+}
+
+/* ── Auth page ──────────────────────────────────── */
+.auth-page {
+    background: #000 !important;
+}
+
+.auth-aside {
+    background: rgba(0, 8, 30, 0.45) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(0, 183, 255, .15) !important;
+}
+
+.auth-highlight {
+    background: rgba(0, 183, 255, .06) !important;
+    border-color: rgba(0, 183, 255, .25) !important;
+}
+
+.auth-highlight-badge {
+    color: #00d4ff !important;
+}
+
+/* ── Inputs ─────────────────────────────────────── */
+.input,
+input,
+textarea,
+select {
+    background: rgba(0, 0, 0, 0.45) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-color: rgba(0, 183, 255, .2) !important;
+    color: #e2e8f0 !important;
+}
+
+.input:focus,
+input:focus,
+textarea:focus {
+    border-color: rgba(0, 183, 255, .7) !important;
+    box-shadow: 0 0 0 2px rgba(0, 183, 255, .12), 0 0 20px rgba(0, 183, 255, .1) !important;
+    background: rgba(0, 5, 20, 0.7) !important;
+}
+
+/* ── Section kicker/badge ───────────────────────── */
+.section-kicker {
+    color: #00d4ff !important;
+}
+
+.hero-kicker {
+    color: #00d4ff !important;
+    border-color: rgba(0, 183, 255, .35) !important;
+    background: rgba(0, 183, 255, .07) !important;
+}
+
+.hero-kicker-dot {
+    background: #00d4ff !important;
+    box-shadow: 0 0 10px #00d4ff !important;
+}
+
+.feature-tag {
+    color: #00d4ff !important;
+    background: rgba(0, 183, 255, .08) !important;
+    border-color: rgba(0, 183, 255, .2) !important;
+}
+
+.step-badge {
+    background: rgba(0, 183, 255, .1) !important;
+    color: #00d4ff !important;
+    border-color: rgba(0, 183, 255, .25) !important;
+    box-shadow: 0 0 14px rgba(0, 183, 255, .3) !important;
+}
+
+.badge {
+    background: rgba(0, 183, 255, .08) !important;
+    color: #00d4ff !important;
+    border-color: rgba(0, 183, 255, .2) !important;
+}
+
+/* ── Hero elements ──────────────────────────────── */
+.hero-title span,
+.hero-risk-chip {
+    color: #f87171 !important;
+    background: rgba(239, 68, 68, .1) !important;
+    border-color: rgba(239, 68, 68, .4) !important;
+}
+
+.hero-score {
+    color: #00d4ff !important;
+}
+
+.hero-glow {
+    background: radial-gradient(ellipse, rgba(0, 183, 255, .18), transparent 65%) !important;
+}
+
+.hero-matrix {
+    color: rgba(0, 183, 255, .08) !important;
+}
+
+/* ── Footer ─────────────────────────────────────── */
+.footer {
+    background: radial-gradient(circle at top, rgba(0, 10, 25, .98), #000) !important;
+    border-top: 1px solid rgba(0, 183, 255, .1) !important;
+    color: rgba(226, 232, 240, .4) !important;
+}
+
+.footer-link {
+    color: rgba(226, 232, 240, .45) !important;
+}
+
+.footer-link:hover {
+    color: #00d4ff !important;
+}
+
+/* ── Scan page specifics ────────────────────────── */
+.risk-low {
+    color: #4ade80 !important;
+}
+
+.risk-medium {
+    color: #facc15 !important;
+}
+
+.risk-high {
+    color: #f87171 !important;
+}
+
+.scan-result-card,
+.scan-result {
+    background: var(--gb-bg) !important;
+    backdrop-filter: blur(14px) !important;
+    border: 1px solid var(--gb-border) !important;
+}
+
+/* ── Dashboard cards ────────────────────────────── */
+.stat-card,
+.chart-card,
+.table-card,
+.report-item,
+.history-item {
+    background: var(--gb-bg) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
+    border: 1px solid var(--gb-border) !important;
+}
+
+/* ── Table ──────────────────────────────────────── */
+.table th {
+    color: #00d4ff !important;
+    border-color: rgba(0, 183, 255, .12) !important;
+}
+
+.table td {
+    border-color: rgba(0, 183, 255, .08) !important;
+}
+
+.table tr:hover {
+    background: rgba(0, 183, 255, .04) !important;
+}
+
+/* ── Scrollbar ──────────────────────────────────── */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 183, 255, .3);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 183, 255, .55);
+}
+
+/* ── Scan line overlay ──────────────────────────── */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: repeating-linear-gradient(0deg,
+            transparent,
+            transparent 3px,
+            rgba(0, 0, 0, 0.06) 3px,
+            rgba(0, 0, 0, 0.06) 4px);
+    animation: scanlines 10s linear infinite;
+}
+
+@keyframes scanlines {
+    from {
+        background-position-y: 0;
+    }
+
+    to {
+        background-position-y: 100px;
+    }
+}
+
+/* Ensure content stays above canvas + scanlines */
+header,
+main,
+footer,
+.spinner-overlay,
+.ss-curtain {
+    position: relative;
+    z-index: 2;
+}
+
+/* ── Toast → centered modal-style alert ─────────── */
+.toast-container {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 9999 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    pointer-events: none !important;
+    padding: 1rem !important;
+    background: transparent !important;
+}
+
+.toast-container:has(.toast) {
+    background: rgba(0, 0, 0, 0.55) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+    pointer-events: all !important;
+}
+
+.toast {
+    pointer-events: all !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 1rem !important;
+    padding: 1.5rem 1.8rem !important;
+    border-radius: 18px !important;
+    background: rgba(0, 8, 30, 0.92) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(0, 183, 255, 0.3) !important;
+    box-shadow: 0 0 60px rgba(0, 183, 255, 0.15), 0 30px 80px rgba(0, 0, 0, 0.8) !important;
+    min-width: 320px !important;
+    max-width: 440px !important;
+    width: 100% !important;
+    animation: toast-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both !important;
+}
+
+@keyframes toast-in {
+    from {
+        opacity: 0;
+        transform: scale(0.88) translateY(-16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.toast-pill {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    flex-shrink: 0 !important;
+}
+
+.toast-info .toast-pill {
+    background: rgba(0, 183, 255, .15) !important;
+    color: #00d4ff !important;
+    border: 1px solid rgba(0, 183, 255, .35) !important;
+}
+
+.toast-success .toast-pill {
+    background: rgba(74, 222, 128, .12) !important;
+    color: #4ade80 !important;
+    border: 1px solid rgba(74, 222, 128, .3) !important;
+}
+
+.toast-error .toast-pill {
+    background: rgba(248, 113, 113, .12) !important;
+    color: #f87171 !important;
+    border: 1px solid rgba(248, 113, 113, .3) !important;
+}
+
+.toast-body {
+    flex: 1 !important;
+}
+
+.toast-title {
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    color: #fff !important;
+    margin-bottom: .3rem !important;
+    letter-spacing: -.01em !important;
+}
+
+.toast-message {
+    font-size: .88rem !important;
+    color: rgba(226, 232, 240, .65) !important;
+    line-height: 1.5 !important;
+}
+
+.toast-close {
+    background: none !important;
+    border: none !important;
+    color: rgba(226, 232, 240, .4) !important;
+    font-size: 1.3rem !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    line-height: 1 !important;
+    flex-shrink: 0 !important;
+    transition: color .15s ease !important;
+    align-self: flex-start !important;
+    margin-top: .1rem !important;
+}
+
+.toast-close:hover {
+    color: #fff !important;
+}
