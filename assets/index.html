@@ -4,23 +4,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ScamShield – AI Scam Detection & Reporting</title>
+  <title>ScamShield – AI Scam Detection &amp; Reporting</title>
   <meta name="description"
-    content="ScamShield is an AI-based scam detection and public reporting platform to help users scan suspicious messages, URLs, and report frauds in real time." />
+    content="ScamShield uses AI to detect phishing, OTP fraud, and scam messages in real time. Scan suspicious content, report scams, and stay protected." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/index.css" />
 </head>
 
-<body>
-  <!-- Global loading spinner -->
+<body class="index-page">
   <div class="spinner-overlay" id="global-spinner" aria-hidden="true">
     <div class="spinner" aria-label="Loading"></div>
   </div>
-
-  <!-- Global toast container -->
   <div class="toast-container" id="toast-container"></div>
 
-  <!-- Navigation -->
-  <header class="navbar">
+  <!-- Matrix rain background -->
+  <canvas id="matrix-canvas" aria-hidden="true"></canvas>
+
+  <!-- ── Navbar ─────────────────────────────────── -->
+  <header class="navbar" id="navbar">
     <div class="container navbar-inner">
       <a href="index.html" class="brand" aria-label="ScamShield home">
         <div class="brand-mark"></div>
@@ -29,11 +34,9 @@
           <span class="brand-text-sub">AI scam firewall</span>
         </div>
       </a>
-
       <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
         <span class="nav-toggle-bar"></span>
       </button>
-
       <nav class="nav-menu" id="nav-menu" aria-label="Primary">
         <div class="nav-links">
           <a class="nav-link" href="scan.html">Scan</a>
@@ -48,158 +51,228 @@
     </div>
   </header>
 
-  <!-- Main content -->
   <main>
-    <!-- Hero -->
-    <section class="hero">
-      <div class="container hero-grid">
-        <div>
-          <div class="hero-kicker">
-            <span class="hero-kicker-dot"></span>
-            Real-time AI scam analysis
+
+    <!-- ── Hero ───────────────────────────────── -->
+    <section class="ix-hero">
+      <!-- Decorative glows – no lines, just soft color blobs -->
+      <div class="ix-glow ix-glow-a" aria-hidden="true"></div>
+      <div class="ix-glow ix-glow-b" aria-hidden="true"></div>
+      <div class="ix-glow ix-glow-c" aria-hidden="true"></div>
+
+      <div class="container ix-hero-inner">
+
+        <!-- Left: copy -->
+        <div class="ix-hero-copy">
+          <div class="ix-badge iu-0">
+            <span class="ix-badge-dot"></span>
+            Real-time AI scam analysis · v1.0
           </div>
-          <h1 class="hero-title">
-            Shield your inbox from
-            <span>phishing & fraud.</span>
+
+          <h1 class="ix-h1 iu-1">
+            Shield your inbox<br />from
+            <span class="ix-grad">phishing &amp; fraud.</span>
           </h1>
           <p class="hero-subtitle">
             Paste a suspicious message or URL and let ScamShield’s AI engine predict the risk level in seconds. Help the
             community by reporting new scam patterns and building a public threat feed.
           </p>
-          <div class="hero-cta-row">
-            <a class="btn btn-primary" href="scan.html">Start an instant scan</a>
-            <a class="btn btn-outline" href="report.html">Report a scam</a>
+
+          <div class="ix-cta iu-3">
+            <a class="btn btn-primary ix-btn-glow" href="scan.html">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+              Start instant scan
+            </a>
+            <a class="btn btn-outline" href="report.html">Report a scam →</a>
           </div>
-          <div class="hero-meta">
-            <div class="hero-meta-item">
-              <span class="hero-meta-badge">99</span>
-              <span>Designed for final‑year cybersecurity projects</span>
+
+          <div class="ix-trust iu-4">
+            <div class="ix-trust-item">
+              <strong>20K+</strong><span>Scams detected</span>
             </div>
-            <div class="hero-meta-item">
-              <span class="hero-meta-badge">∞</span>
-              <span>Pluggable APIs: <code>/predict</code>, <code>/report</code>, <code>/history</code></span>
+            <div class="ix-trust-div"></div>
+            <div class="ix-trust-item">
+              <strong>95.2%</strong><span>Accuracy</span>
+            </div>
+            <div class="ix-trust-div"></div>
+            <div class="ix-trust-item">
+              <strong>&lt;1s</strong><span>Response time</span>
             </div>
           </div>
         </div>
 
-        <div class="hero-visual" aria-hidden="true">
-          <div class="hero-matrix"></div>
-          <div class="hero-glow"></div>
-          <div class="hero-panel">
-            <div class="hero-panel-header">
-              <div class="hero-panel-title">Live scam inspection</div>
-              <div class="hero-shield">⛨</div>
+        <!-- Right: live card -->
+        <div class="ix-hero-card iu-card" aria-hidden="true">
+          <div class="ix-card-shell">
+            <!-- macOS-style header -->
+            <div class="ix-card-head">
+              <div class="ix-dots">
+                <span class="ix-dot red"></span>
+                <span class="ix-dot yellow"></span>
+                <span class="ix-dot green"></span>
+              </div>
+              <span class="ix-card-title">Live scam inspection</span>
+              <span class="ix-live-pill">● LIVE</span>
             </div>
-            <div class="hero-scan-preview">
-              <div class="hero-scan-row">
-                <span class="hero-pill">
-                  <span style="width: 6px; height: 6px; border-radius: 999px; background: #22c55e;"></span>
-                  SMS · UPI phishing
+
+            <!-- Body -->
+            <div class="ix-card-body">
+              <div class="ix-row">
+                <span class="ix-tag">
+                  <span class="ix-tag-dot"></span>SMS · UPI phishing
                 </span>
-                <span class="hero-risk-chip">HIGH RISK</span>
+                <span class="ix-risk-badge">HIGH RISK</span>
               </div>
               <p class="risk-explanation">
                 “Your KYC is pending. Click this link to avoid account suspension.” Detected phishing keywords, spoofed
                 domain and
                 urgency pattern.
               </p>
-              <div class="hero-scan-row" style="margin-top: 0.6rem;">
-                <span class="hero-score">Risk score: 87%</span>
-                <span class="badge">Model: scamshield‑v1 (demo)</span>
+
+              <div class="ix-score-wrap">
+                <span class="ix-score-lbl">Risk score</span>
+                <div class="ix-bar-track">
+                  <div class="ix-bar-fill" id="hero-bar"></div>
+                </div>
+                <span class="ix-score-num">87%</span>
+              </div>
+
+              <div class="ix-model-row">
+                <span class="ix-model-tag">scamshield-v1 · demo</span>
+                <span class="ix-verified">✓ Verified</span>
               </div>
             </div>
           </div>
+
+          <!-- Floating chips -->
+          <div class="ix-chip ix-chip-a">⚡ Instant</div>
+          <div class="ix-chip ix-chip-b">🛡️ 95.2% accurate</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── Stats bar ───────────────────────────── -->
+    <div class="ix-stats-bar">
+      <div class="container ix-stats-inner">
+        <div class="ix-stat iru-0">
+          <div class="ix-stat-num" data-target="20" data-suffix="K+">0</div>
+          <div class="ix-stat-lbl">Scams Detected</div>
+        </div>
+        <div class="ix-stat-sep"></div>
+        <div class="ix-stat iru-1">
+          <div class="ix-stat-num" data-target="95.2" data-suffix="%">0</div>
+          <div class="ix-stat-lbl">Accuracy Rate</div>
+        </div>
+        <div class="ix-stat-sep"></div>
+        <div class="ix-stat iru-2">
+          <div class="ix-stat-num">&lt;1s</div>
+          <div class="ix-stat-lbl">Avg Response</div>
+        </div>
+        <div class="ix-stat-sep"></div>
+        <div class="ix-stat iru-3">
+          <div class="ix-stat-num" data-target="12" data-suffix="K+">0</div>
+          <div class="ix-stat-lbl">Users Protected</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Features ────────────────────────────── -->
+    <section class="ix-section" id="features">
+      <div class="container">
+        <div class="ix-sec-hd ir-up">
+          <p class="ix-kicker">Why ScamShield?</p>
+          <h2 class="ix-h2">Built for modern digital fraud</h2>
+          <p class="ix-sub">Combine AI predictions with community‑driven reporting to protect users from phishing, OTP
+            fraud, fake investments and more.</p>
+        </div>
+
+        <div class="ix-feats">
+          <article class="ix-feat ir-up" style="--d:.0s">
+            <div class="ix-feat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+              </svg>
+            </div>
+            <h3 class="ix-feat-h">AI-based scam scoring</h3>
+            <p class="ix-feat-p">Paste any SMS, email snippet or URL and get an instant Low / Medium / High risk
+              prediction with a plain-language explanation.</p>
+            <span class="ix-feat-tag">/predict endpoint ready</span>
+          </article>
+
+          <article class="ix-feat ir-up" style="--d:.1s">
+            <div class="ix-feat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <h3 class="ix-feat-h">Public scam reporting</h3>
+            <p class="ix-feat-p">Let victims report suspicious content to build a shared threat feed and visualize how
+              scams evolve over time.</p>
+            <span class="ix-feat-tag">/report · /history</span>
+          </article>
+
+          <article class="ix-feat ir-up" style="--d:.2s">
+            <div class="ix-feat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7" />
+                <rect x="14" y="3" width="7" height="7" />
+                <rect x="14" y="14" width="7" height="7" />
+                <rect x="3" y="14" width="7" height="7" />
+              </svg>
+            </div>
+            <h3 class="ix-feat-h">Analyst dashboard</h3>
+            <p class="ix-feat-p">Review scan history, see reported scams and export anonymized data for your research —
+              all in one clean dashboard view.</p>
+            <span class="ix-feat-tag">Final-year ready</span>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- Features -->
-    <section class="section">
+    <!-- ── How it works ────────────────────────── -->
+    <section class="ix-section ix-how">
       <div class="container">
-        <div class="section-header">
-          <div class="section-kicker">Why ScamShield?</div>
-          <h2 class="section-title">Built for modern digital fraud</h2>
-          <p class="section-subtitle">
-            Combine AI predictions with community‑driven reporting to protect users from phishing, OTP fraud, fake
-            investments and
-            more.
+        <div class="ix-sec-hd ir-up">
+          <p class="ix-kicker">How it works</p>
+          <h2 class="ix-h2">Three steps to stay safe</h2>
+          <p class="ix-sub">The steps are to be followed to stay safe from scams.
           </p>
         </div>
-        <div class="features-grid">
-          <article class="feature-card">
-            <div class="feature-icon">⚡</div>
-            <h3 class="feature-title">AI‑based scam scoring</h3>
-            <p class="feature-text">
-              Paste any SMS, email snippet or URL and get an instant Low/Medium/High risk prediction and an explanation
-              users can
-              understand.
-            </p>
-            <span class="feature-tag">/predict endpoint ready</span>
-          </article>
-          <article class="feature-card">
-            <div class="feature-icon">🛡️</div>
-            <h3 class="feature-title">Public scam reporting</h3>
-            <p class="feature-text">
-              Let victims report suspicious content to build a shared threat feed and visualize how scams evolve over
-              time.
-            </p>
-            <span class="feature-tag">/report · /history</span>
-          </article>
-          <article class="feature-card">
-            <div class="feature-icon">📊</div>
-            <h3 class="feature-title">Analyst dashboard</h3>
-            <p class="feature-text">
-              Use the dashboard to review scan history, see reported scams and export anonymized data for your research
-              chapter.
-            </p>
-            <span class="feature-tag">Final‑year ready</span>
-          </article>
-        </div>
-      </div>
-    </section>
 
-    <!-- How it works -->
-    <section class="section">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-kicker">How it works</div>
-          <h2 class="section-title">Three steps to stay safe</h2>
-          <p class="section-subtitle">
-            This frontend is fully wired with placeholders, so you can simply connect your backend models and
-            deployment.
-          </p>
-        </div>
-        <div class="steps">
-          <div class="step-card">
-            <div class="step-badge">1</div>
-            <h3 class="step-title">Scan suspicious content</h3>
-            <p class="step-text">
-              Users enter a message or URL on the Scan page. The text is sent to your <code>/predict</code> API for
-              classification.
-            </p>
+        <div class="ix-steps">
+          <div class="ix-step ir-up" style="--d:.0s">
+            <div class="ix-step-lbl">01</div>
+            <h3 class="ix-step-h">Scan suspicious content</h3>
+            <p class="ix-step-p">Enter a message or URL on the Scan page. The text is sent to your <code>/predict</code>
+              API for classification.</p>
           </div>
-          <div class="step-card">
-            <div class="step-badge">2</div>
-            <h3 class="step-title">Store & correlate</h3>
-            <p class="step-text">
-              Risk scores and user reports flow into your database via the <code>/history</code> and
+          <div class="ix-step ir-up" style="--d:.12s">
+            <div class="ix-step-lbl">02</div>
+            <h3 class="ix-step-h">Store &amp; correlate</h3>
+            <p class="ix-step-p">Risk scores and user reports flow into your database via the <code>/history</code> and
               <code>/report</code> routes.
             </p>
           </div>
-          <div class="step-card">
-            <div class="step-badge">3</div>
-            <h3 class="step-title">Monitor in dashboard</h3>
-            <p class="step-text">
-              Logged‑in users view scan trends, top scam types and anonymized details from the Dashboard page for
-              analysis.
-            </p>
+          <div class="ix-step ir-up" style="--d:.24s">
+            <div class="ix-step-lbl">03</div>
+            <h3 class="ix-step-h">Monitor in dashboard</h3>
+            <p class="ix-step-p">Logged-in users view scan trends, top scam types and anonymized details from the
+              Dashboard for analysis.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Disclaimer -->
-    <section class="section">
+    <!-- ── Testimonials ─────────────────────────── -->
+    <section class="ix-section" id="testimonials">
       <div class="container">
         <div class="disclaimer">
           <div class="disclaimer-icon">!</div>
@@ -229,20 +302,67 @@
   </footer>
 
   <script>
-    // Simple nav toggle for mobile
+    /* year */
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    /* navbar shrink */
     (function () {
-      const toggle = document.getElementById('nav-toggle');
-      const menu = document.getElementById('nav-menu');
-      if (!toggle || !menu) return;
-      toggle.addEventListener('click', function () {
-        menu.classList.toggle('open');
-      });
+      var nb = document.getElementById('navbar');
+      window.addEventListener('scroll', function () { nb.classList.toggle('scrolled', scrollY > 50); }, { passive: true });
+    })();
+
+    /* mobile nav */
+    (function () {
+      var t = document.getElementById('nav-toggle'), m = document.getElementById('nav-menu');
+      if (t && m) t.addEventListener('click', function () { m.classList.toggle('open'); });
     })();
 
     // Dynamic year
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
   <script src="js/transitions.js"></script>
+  <script>
+    /* ── Matrix rain animation ── */
+    (function () {
+      var canvas = document.getElementById('matrix-canvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var W, H, cols, drops;
+      var FONT_SIZE = 14;
+      var CHARS = '01アイウエオカキクケコサシスセソタチツテトナニヌネノABCDEFGHIJKLMN0123456789@#$%';
+
+      function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+        cols = Math.floor(W / FONT_SIZE);
+        drops = Array(cols).fill(1);
+      }
+      window.addEventListener('resize', resize, { passive: true });
+      resize();
+
+      function draw() {
+        /* fade trail */
+        ctx.fillStyle = 'rgba(0,0,0,0.05)';
+        ctx.fillRect(0, 0, W, H);
+
+        /* neon blue characters */
+        ctx.fillStyle = '#00d4ff';
+        ctx.font = FONT_SIZE + 'px "Courier New", monospace';
+
+        for (var i = 0; i < drops.length; i++) {
+          var ch = CHARS[Math.floor(Math.random() * CHARS.length)];
+          ctx.fillStyle = drops[i] * FONT_SIZE < 80
+            ? 'rgba(255,255,255,0.9)'
+            : 'rgba(0,183,255,0.55)';
+          ctx.fillText(ch, i * FONT_SIZE, drops[i] * FONT_SIZE);
+
+          if (drops[i] * FONT_SIZE > H && Math.random() > 0.975) drops[i] = 0;
+          drops[i]++;
+        }
+      }
+      setInterval(draw, 45);
+    })();
+  </script>
 </body>
 
 </html>
