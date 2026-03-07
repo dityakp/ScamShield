@@ -1,0 +1,31 @@
+# ─── FastAPI & Server ─────────────────────────────────────────
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+
+# ─── Database ─────────────────────────────────────────────────
+sqlalchemy==2.0.36
+psycopg2-binary==2.9.10
+alembic==1.14.1
+
+# ─── Authentication ───────────────────────────────────────────
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]==3.3.0
+bcrypt==4.2.1
+
+# ─── Validation & Config ─────────────────────────────────────
+pydantic==2.10.4
+pydantic-settings==2.7.1
+email-validator==2.2.0
+
+# ─── Security / Rate Limiting ────────────────────────────────
+slowapi==0.1.9
+
+# ─── ML Pipeline ─────────────────────────────────────────────
+scikit-learn==1.6.1
+joblib==1.4.2
+pandas==2.2.3
+numpy==2.2.1
+
+# ─── CORS ─────────────────────────────────────────────────────
+# (built into FastAPI via starlette)
