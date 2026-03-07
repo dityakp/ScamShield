@@ -131,14 +131,22 @@
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // Wire simple client-side validation and success message
+        // Wire validation and submit to real /api/report endpoint
         (function () {
-            const form = document.getElementById('report-form');
-            const scamType = document.getElementById('scamType');
-            const description = document.getElementById('reportDescription');
-            const scamTypeError = document.getElementById('scamTypeError');
-            const descriptionError = document.getElementById('reportDescriptionError');
-            const success = document.getElementById('reportSuccess');
+            var API_BASE = (window.ScamShield && window.ScamShield.API_BASE) || 'http://127.0.0.1:8000';
+            var form = document.getElementById('report-form');
+            var scamType = document.getElementById('scamType');
+            var channel = document.getElementById('reportedChannel');
+            var identifier = document.getElementById('reportedIdentifier');
+            var description = document.getElementById('reportDescription');
+            var scamTypeError = document.getElementById('scamTypeError');
+            var descriptionError = document.getElementById('reportDescriptionError');
+            var success = document.getElementById('reportSuccess');
+
+            function getToken() {
+                try { return window.localStorage.getItem('scamshieldToken') || ''; }
+                catch (e) { return ''; }
+            }
 
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
@@ -146,7 +154,7 @@
                 descriptionError.textContent = '';
                 success.style.display = 'none';
 
-                let valid = true;
+                var valid = true;
                 if (!scamType.value) {
                     scamTypeError.textContent = 'Please choose a scam type.';
                     valid = false;
@@ -155,24 +163,49 @@
                     descriptionError.textContent = 'Please describe the scam with at least 20 characters.';
                     valid = false;
                 }
-
                 if (!valid) return;
 
-                // Placeholder: connect to /report backend API here
-                // Example:
-                // fetch('/report', { method: 'POST', body: JSON.stringify({...}) })
-                //   .then(...)
+                if (window.ScamShield) window.ScamShield.showSpinner();
 
-                if (window.ScamShield && typeof window.ScamShield.showToast === 'function') {
-                    window.ScamShield.showToast({
-                        type: 'success',
-                        title: 'Report recorded',
-                        message: 'Your scam report has been stored locally for now.',
+                fetch(API_BASE + '/api/report', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + getToken(),
+                    },
+                    body: JSON.stringify({
+                        scam_type: scamType.value,
+                        channel: channel ? channel.value.trim() : '',
+                        identifier: identifier ? identifier.value.trim() : '',
+                        description: description.value.trim(),
+                    }),
+                })
+                    .then(function (res) {
+                        if (!res.ok) return res.json().then(function (err) { throw new Error(err.detail || 'Report failed.'); });
+                        return res.json();
+                    })
+                    .then(function (data) {
+                        if (window.ScamShield) window.ScamShield.hideSpinner();
+                        if (window.ScamShield && typeof window.ScamShield.showToast === 'function') {
+                            window.ScamShield.showToast({
+                                type: 'success',
+                                title: 'Report submitted',
+                                message: 'Your scam report (ID: ' + data.report_id + ') has been saved.',
+                            });
+                        }
+                        success.style.display = 'block';
+                        form.reset();
+                    })
+                    .catch(function (err) {
+                        if (window.ScamShield) window.ScamShield.hideSpinner();
+                        if (window.ScamShield && typeof window.ScamShield.showToast === 'function') {
+                            window.ScamShield.showToast({
+                                type: 'error',
+                                title: 'Report failed',
+                                message: err.message || 'Could not submit report.',
+                            });
+                        }
                     });
-                }
-
-                success.style.display = 'block';
-                form.reset();
             });
         })();
     </script>
