@@ -1,22 +1,22 @@
 ﻿/* 
   ScamShield Global Styles
-  Theme: Dark cybersecurity (deep blue/black) with neon green accents
+  Theme: Black · Neon Blue · White — Cybersecurity
 */
 
 :root {
-  --bg-primary: #020617;
-  --bg-elevated: #020617;
-  --bg-card: #020617;
-  --bg-soft: #020617;
-  --accent: #22c55e;
-  --accent-soft: rgba(34, 197, 94, 0.12);
-  --accent-strong: #4ade80;
+  --bg-primary: #000;
+  --bg-elevated: #00050f;
+  --bg-card: #000812;
+  --bg-soft: #00050f;
+  --accent: #00b7ff;
+  --accent-soft: rgba(0, 183, 255, 0.12);
+  --accent-strong: #00d4ff;
   --accent-danger: #f97373;
   --accent-warning: #facc15;
   --text-primary: #e5e7eb;
-  --text-secondary: #9ca3af;
-  --border-subtle: rgba(148, 163, 184, 0.35);
-  --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.9);
+  --text-secondary: #94a3b8;
+  --border-subtle: rgba(0, 183, 255, 0.2);
+  --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.9);
   --radius-lg: 18px;
   --radius-md: 12px;
   --radius-pill: 999px;
