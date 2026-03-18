@@ -243,16 +243,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        const path = window.location.pathname.toLowerCase();
-        const isScanPage = path.endsWith('scan.html');
-        const isReportPage = path.endsWith('report.html');
-
-        if ((isScanPage || isReportPage) && !isAuthenticated()) {
-            const from = isScanPage ? 'scan' : 'report';
-            window.location.href = 'login.html?from=' + encodeURIComponent(from);
-            return;
-        }
-
         global.initCommonUI();
 
         const scanForm = $('scan-form');

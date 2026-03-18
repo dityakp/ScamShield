@@ -5,7 +5,7 @@ python-multipart==0.0.20
 
 # ─── Database ─────────────────────────────────────────────────
 sqlalchemy==2.0.36
-psycopg2-binary==2.9.10
+psycopg2-binary==2.9.11
 alembic==1.14.1
 
 # ─── Authentication ───────────────────────────────────────────
@@ -14,18 +14,18 @@ python-jose[cryptography]==3.3.0
 bcrypt==4.2.1
 
 # ─── Validation & Config ─────────────────────────────────────
-pydantic==2.10.4
-pydantic-settings==2.7.1
+pydantic==2.12.5
+pydantic-settings==2.13.1
 email-validator==2.2.0
 
 # ─── Security / Rate Limiting ────────────────────────────────
 slowapi==0.1.9
 
 # ─── ML Pipeline ─────────────────────────────────────────────
-scikit-learn==1.6.1
-joblib==1.4.2
-pandas==2.2.3
-numpy==2.2.1
+scikit-learn==1.8.0
+joblib==1.5.3
+pandas==3.0.1
+numpy==2.4.2
 
 # ─── CORS ─────────────────────────────────────────────────────
 # (built into FastAPI via starlette)

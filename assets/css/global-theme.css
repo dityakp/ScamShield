@@ -8,18 +8,69 @@
 :root {
     --accent: #00b7ff;
     --accent-strong: #00d4ff;
+    --accent-vivid: #38e4ff;
     --gb-bg: rgba(0, 8, 30, 0.55);
     /* glassmorphism card bg */
     --gb-border: rgba(0, 183, 255, 0.18);
     --gb-blur: 14px;
+    --neon-glow-sm: 0 0 10px rgba(0, 183, 255, 0.5), 0 0 20px rgba(0, 183, 255, 0.25);
+    --neon-glow-md: 0 0 20px rgba(0, 183, 255, 0.6), 0 0 50px rgba(0, 183, 255, 0.3);
+    --neon-glow-lg: 0 0 40px rgba(0, 183, 255, 0.65), 0 0 80px rgba(0, 183, 255, 0.35);
 }
 
 /* ── Base ───────────────────────────────────────── */
-html,
+html {
+    height: 100%;
+}
+
 body {
     background: #000 !important;
     color: #e2e8f0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
+
+/* Force main content to properly expand grid rows without absolute collapse */
+body > main,
+body > .auth-main {
+    flex: 1 0 auto;
+    position: relative;
+    z-index: 2;
+    padding-bottom: 2rem;
+}
+
+/* ── Footer — fixed at bottom explicitly ───────────── */
+.footer,
+.ix-footer {
+    flex-shrink: 0;
+    margin-top: auto;
+    position: relative;
+    z-index: 10;
+    background: radial-gradient(circle at top, rgba(0, 10, 25, 0.98), #000);
+    border-top: 1px solid rgba(0, 183, 255, 0.15) !important;
+}
+
+.footer-inner,
+.ix-foot-inner {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: .6rem !important;
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+}
+
+.footer-links,
+.ix-foot-links {
+    display: flex !important;
+    gap: 1.4rem !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+}
+
 
 /* ── Navbar ─────────────────────────────────────── */
 .navbar {
@@ -39,7 +90,13 @@ body {
 /* Brand neon blue accent */
 .brand-mark {
     background: linear-gradient(135deg, #0ea5e9 0%, #00d4ff 60%, #0284c7 100%) !important;
-    box-shadow: 0 0 20px rgba(0, 183, 255, .5) !important;
+    box-shadow: 0 0 20px rgba(0, 183, 255, .55) !important;
+    animation: neon-brand-pulse 3s ease-in-out infinite;
+}
+
+@keyframes neon-brand-pulse {
+    0%, 100% { box-shadow: 0 0 18px rgba(0, 183, 255, .5), 0 0 35px rgba(0, 183, 255, .2); }
+    50%       { box-shadow: 0 0 28px rgba(0, 183, 255, .75), 0 0 55px rgba(0, 183, 255, .4); }
 }
 
 /* Nav links */
@@ -63,23 +120,27 @@ body {
     color: #000 !important;
     font-weight: 700 !important;
     border: none !important;
-    box-shadow: 0 0 0 1px rgba(0, 183, 255, .35), 0 6px 28px rgba(0, 183, 255, .4) !important;
+    box-shadow: 0 0 0 1px rgba(0, 183, 255, .35), 0 6px 28px rgba(0, 183, 255, .45) !important;
+    transition: transform .2s ease, box-shadow .2s ease !important;
 }
 
 .btn-primary:hover {
-    box-shadow: 0 0 0 1px rgba(0, 183, 255, .7), 0 10px 45px rgba(0, 183, 255, .7) !important;
-    transform: translateY(-2px);
+    box-shadow: 0 0 0 1px rgba(0, 183, 255, .75), 0 10px 45px rgba(0, 183, 255, .75), 0 0 80px rgba(0, 183, 255, .25) !important;
+    transform: translateY(-2px) scale(1.02) !important;
 }
 
 .btn-outline {
     border-color: rgba(0, 183, 255, .4) !important;
     color: #00d4ff !important;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease !important;
 }
 
 .btn-outline:hover {
     background: rgba(0, 183, 255, .08) !important;
-    border-color: rgba(0, 183, 255, .7) !important;
+    border-color: rgba(0, 183, 255, .75) !important;
     color: #fff !important;
+    box-shadow: 0 0 20px rgba(0, 183, 255, .2) !important;
+    transform: translateY(-1px) !important;
 }
 
 /* ── Cards + any .card element ──────────────────── */

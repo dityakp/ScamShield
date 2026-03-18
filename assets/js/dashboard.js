@@ -295,12 +295,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        const path = window.location.pathname.toLowerCase();
-        if (path.endsWith('dashboard.html') && !isAuthenticated()) {
-            window.location.href = 'login.html?from=' + encodeURIComponent('dashboard');
-            return;
-        }
-
         global.initCommonUI();
         populateHeaderUser();
         populateScanHistory();
