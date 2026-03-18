@@ -59,6 +59,7 @@ class PredictResponse(BaseModel):
     indicators: List[str]
     type: str
     created_at: datetime
+    precaution: Optional[str] = None  # xAI-generated safety advice
 
     class Config:
         from_attributes = True
