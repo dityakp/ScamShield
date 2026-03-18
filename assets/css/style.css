@@ -1,4 +1,4 @@
-﻿/* 
+/* 
   ScamShield Global Styles
   Theme: Black · Neon Blue · White — Cybersecurity
 */
@@ -864,6 +864,63 @@ main {
 .risk-explanation {
   font-size: 0.86rem;
   color: var(--text-secondary);
+  margin-bottom: 0.85rem;
+}
+
+/* xAI Precaution Panel */
+
+.precaution-panel {
+  margin-top: 0.85rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: radial-gradient(circle at top left, rgba(250, 204, 21, 0.08), rgba(15, 23, 42, 0.92) 70%);
+  border: 1px solid rgba(250, 204, 21, 0.45);
+  box-shadow: 0 0 18px rgba(250, 204, 21, 0.07);
+  animation: precaution-in 0.25s ease-out;
+}
+
+@keyframes precaution-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.precaution-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.6rem;
+  font-size: 0.88rem;
+  color: #fde68a;
+}
+
+.precaution-icon {
+  font-size: 1rem;
+}
+
+.precaution-badge {
+  margin-left: auto;
+  padding: 0.1rem 0.48rem;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(250, 204, 21, 0.14);
+  color: #facc15;
+  border: 1px solid rgba(250, 204, 21, 0.5);
+}
+
+.precaution-list {
+  margin: 0;
+  padding-left: 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.precaution-list li {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
 }
 
 /* Dashboard */
