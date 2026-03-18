@@ -10,6 +10,7 @@ from app.models import User, ScanResult
 from app.schemas import PredictRequest, PredictResponse, ScanHistoryItem
 from app.dependencies import get_current_user
 from app.ml.predictor import predict_risk
+from app.ml.xai_advisor import get_precaution_advice
 
 router = APIRouter(prefix="/api", tags=["Scan & Predict"])
 
@@ -24,6 +25,14 @@ def predict(body: PredictRequest, db: Session = Depends(get_db), current_user: U
     except Exception as e:
         from fastapi import HTTPException
         raise HTTPException(status_code=500, detail=f"ML Prediction Error: {str(e)}")
+
+    # ── Generate xAI precautionary advice ─────────────────────
+    precaution = get_precaution_advice(
+        text=body.text,
+        scan_type=body.type,
+        risk_level=result["risk_level"],
+        indicators=result["indicators"],
+    )
 
     scan = ScanResult(
         user_id=current_user.id,
@@ -45,6 +54,7 @@ def predict(body: PredictRequest, db: Session = Depends(get_db), current_user: U
         indicators=scan.indicators,
         type=scan.scan_type,
         created_at=scan.created_at,
+        precaution=precaution,
     )
 
 
