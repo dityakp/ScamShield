@@ -124,7 +124,7 @@ ScamShield/
 ## 🧪 Machine Learning Pipeline
 
 ### Training Data
-- **75,000+ samples** from multiple public sources:
+- **2000000+ samples** from multiple public sources:
   - UCI SMS Spam Collection (5,574 SMS)
   - Kaggle SMS Spam Collection (5,542 SMS)
   - Combined Smishing Dataset (84,000+ SMS)
@@ -137,6 +137,7 @@ ScamShield/
 4. **Fallback:** Rule-based keyword scoring when no trained model is available
 
 ### Performance Metrics
+
 | Metric | Score |
 |--------|-------|
 | **Accuracy** | 93% |
@@ -144,23 +145,22 @@ ScamShield/
 | **Weighted Recall** | 0.93 |
 | **Weighted F1** | 0.93 |
 
-### Rebuild the Model
-```bash
-cd backend
-python -m app.ml.build_dataset   # Download & merge datasets
-python -m app.ml.train            # Train & evaluate model
-```
-
 ---
 
 ## ▶️ Getting Started
 
 ### Prerequisites
+
 - Python 3.11+
-- PostgreSQL 16 (or Docker)
-- Node.js (optional, for frontend tooling)
+- **PostgreSQL 16** (required — the app will not work without it)
+- Docker & Docker Compose *(recommended)* **or** a local PostgreSQL installation
+- Node.js *(optional, for frontend tooling)*
+
+---
 
 ### Option 1: Docker Compose (Recommended)
+
+> PostgreSQL is included automatically via `docker-compose.yml` — no manual DB setup needed.
 
 ```bash
 git clone https://github.com/your-username/ScamShield.git
@@ -168,45 +168,115 @@ cd ScamShield
 docker-compose up --build
 ```
 
-- **Backend API:** http://localhost:8000
-- **Swagger Docs:** http://localhost:8000/docs
-- **Frontend:** Open `assets/index.html` with Live Server (port 5500)
+| Service | URL |
+|---------|-----|
+| Backend API | http://localhost:8000 |
+| Swagger Docs | http://localhost:8000/docs |
+| Frontend | Open `assets/index.html` with Live Server (port 5500) |
+
+---
 
 ### Option 2: Manual Setup
 
+#### Step 1 — Install PostgreSQL
+
+Download and install **PostgreSQL 16** for your OS:
+
+| OS | Install Command / Link |
+|----|----------------------|
+| **Windows** | [postgresql.org/download/windows](https://www.postgresql.org/download/windows/) |
+| **macOS** | `brew install postgresql@16 && brew services start postgresql@16` |
+| **Linux (Debian/Ubuntu)** | `sudo apt install postgresql postgresql-contrib` |
+
+#### Step 2 — Create the Database & User
+
+Open a PostgreSQL shell (`psql`) and run:
+
+```sql
+CREATE USER scamshield WITH PASSWORD 'password';
+CREATE DATABASE scamshield_db OWNER scamshield;
+GRANT ALL PRIVILEGES ON DATABASE scamshield_db TO scamshield;
+```
+
+**Platform-specific ways to open psql:**
+
+| OS | Command |
+|----|---------|
+| **Windows** | Open **SQL Shell (psql)** from the Start Menu, or use pgAdmin |
+| **macOS** | `psql postgres` |
+| **Linux** | `sudo -u postgres psql` |
+
+Verify the connection:
+
 ```bash
-# 1. Create & activate virtual environment
+psql -U scamshield -d scamshield_db -h localhost
+# You should see a "scamshield_db=>" prompt. Type \q to exit.
+```
+
+#### Step 3 — Clone & Create Virtual Environment
+
+```bash
+git clone https://github.com/your-username/ScamShield.git
+cd ScamShield
+
 python -m venv venv
 
 # Windows (PowerShell)
 .\venv\Scripts\Activate.ps1
-# If you get an execution policy error, run this first:
-#   Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 
 # macOS / Linux
 # source venv/bin/activate
-
-# 2. Install Python dependencies
-pip install -r requirements.txt
-
-# 3. Set up PostgreSQL database
-#    Create a database named 'scamshield_db'
-
-# 4. Configure environment
-cp backend/.env.example backend/.env
-# Edit backend/.env with your database credentials
-
-# 5. (Optional) Build dataset & train model
-cd backend
-python -m app.ml.build_dataset
-python -m app.ml.train
-
-# 5. Start the backend server
-uvicorn app.main:app --reload --port 8000
-
-# 6. Open frontend
-# Use VS Code Live Server or any static file server on the assets/ folder
 ```
+
+> **Windows note:** If you get an execution policy error, run:
+> `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`
+
+#### Step 4 — Install Python Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+#### Step 5 — Configure Environment Variables
+
+```bash
+cp backend/.env.example backend/.env
+```
+
+Edit `backend/.env` with your database credentials. The default `DATABASE_URL` is:
+
+```
+DATABASE_URL=postgresql://scamshield:password@localhost:5432/scamshield_db
+```
+
+Update the username/password if you used different values in Step 2.
+
+#### Step 6 — (Optional) Build Dataset & Train ML Model
+
+> **Note:** The pre-trained model is already included in the repository! You only need to perform this step if you wish to retrain the model from scratch.
+
+To train the model yourself, you must first download the complete training dataset (as it is not committed to GitHub due to file size limits):
+1. Download `sample_scams.csv` from: `https://drive.google.com/drive/folders/1uxq6dLnNglKgGQt1R2Pua3UK7LTGJI6R?usp=sharing`
+2. Place the downloaded file inside the `backend/app/ml/data/` directory.
+
+Then, you can run the training scripts:
+
+```bash
+cd backend
+python -m app.ml.build_dataset   # (Optional) Download & merge secondary datasets
+python -m app.ml.train           # Train & evaluate model
+```
+
+#### Step 7 — Start the Backend Server
+
+```bash
+cd backend
+uvicorn app.main:app --reload --port 8000
+```
+
+#### Step 8 — Open the Frontend
+
+Open the `assets/` folder with **VS Code Live Server** (port 5500) or any static file server.
 
 ---
 
