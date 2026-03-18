@@ -158,7 +158,6 @@
         const riskLevelText = $('riskLevelText');
         const riskScoreEl = $('riskScore');
         const explanationEl = $('riskExplanation');
-        const jsonPreview = $('scanJsonPreview');
 
         if (!typeEl || !inputEl || !typeError || !inputError) return;
 
@@ -192,7 +191,7 @@
 
         callPredictApi(payload)
             .then(function (res) {
-                if (!riskPill || !riskLevelText || !riskScoreEl || !explanationEl || !jsonPreview) return;
+                if (!riskPill || !riskLevelText || !riskScoreEl || !explanationEl) return;
 
                 riskPill.classList.remove('low', 'medium', 'high');
                 const levelClass = res.risk_level.toLowerCase();
@@ -204,7 +203,26 @@
                 riskScoreEl.textContent = res.risk_score;
                 explanationEl.textContent = res.explanation;
 
-                jsonPreview.textContent = JSON.stringify(res, null, 2);
+                // ── Render xAI precaution advice ──
+                var precautionPanel = $('precautionPanel');
+                var precautionList  = $('precautionList');
+                if (precautionPanel && precautionList && res.precaution) {
+                    precautionList.innerHTML = '';
+                    // Grok returns a numbered list; split by newlines and strip leading numbers
+                    var lines = res.precaution.split('\n').filter(function(l) { return l.trim(); });
+                    lines.forEach(function (line) {
+                        // Strip leading "1. ", "2. " etc.
+                        var clean = line.replace(/^\s*\d+\.\s*/, '').trim();
+                        if (clean) {
+                            var li = document.createElement('li');
+                            li.textContent = clean;
+                            precautionList.appendChild(li);
+                        }
+                    });
+                    precautionPanel.style.display = 'block';
+                } else if (precautionPanel) {
+                    precautionPanel.style.display = 'none';
+                }
 
                 if (emptyState) emptyState.style.display = 'none';
                 if (resultCard) resultCard.style.display = 'block';
