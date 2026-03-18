@@ -98,8 +98,7 @@
                     <header class="card-header">
                         <h2 class="card-title">Risk assessment</h2>
                         <p class="card-subtitle">
-                            Below is a dummy response that simulates what your backend model could return. Connect it to
-                            <code>/predict</code> later.
+                            AI-powered analysis from your ScamShield backend.
                         </p>
                     </header>
                     <div id="scanResultEmpty" class="text-muted">
@@ -114,16 +113,17 @@
                             </span>
                             <span class="risk-score">Score: <span id="riskScore">72</span>%</span>
                         </div>
-                        <p class="risk-explanation" id="riskExplanation">
-                            Dummy explanation will appear here, highlighting phishing indicators such as fake domains,
-                            urgency tactics and
-                            financial bait.
-                        </p>
-                        <div class="mt-md">
-                            <div class="field-hint">
-                                <strong>Dummy JSON preview:</strong>
-                                <pre id="scanJsonPreview" style="font-size: 0.75rem; margin-top: 0.4rem;"></pre>
+                        <p class="risk-explanation" id="riskExplanation"></p>
+
+                        <!-- xAI Grok Precaution Panel -->
+                        <div id="precautionPanel" style="display:none;" class="precaution-panel">
+                            <div class="precaution-header">
+                                <span class="precaution-icon">🛡️</span>
+                                <strong>AI Safety Advice</strong>
+                                <span class="precaution-badge">Powered by Grok</span>
                             </div>
+                            <ol id="precautionList" class="precaution-list"></ol>
+                        </div>
                         </div>
                     </div>
                 </aside>
