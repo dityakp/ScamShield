@@ -10,7 +10,7 @@ from slowapi.errors import RateLimitExceeded
 
 from app.config import settings
 from app.database import engine, Base
-from app.routers import auth_router, scan_router, report_router, dashboard_router
+from app.routers import auth_router, scan_router, report_router, dashboard_router, admin_router
 
 # ── Create all tables ─────────────────────────────────────────
 Base.metadata.create_all(bind=engine)
@@ -42,6 +42,7 @@ app.include_router(auth_router.router)
 app.include_router(scan_router.router)
 app.include_router(report_router.router)
 app.include_router(dashboard_router.router)
+app.include_router(admin_router.router)
 
 
 @app.get("/", tags=["Health"])
