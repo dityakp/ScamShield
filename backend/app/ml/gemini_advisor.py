@@ -1,5 +1,5 @@
 """
-xAI (Grok) advisor – generates human-friendly precautionary advice
+Google Gemini advisor – generates human-friendly precautionary advice
 when a scam or suspicious content is detected by the ML model.
 Falls back to built-in advice when the API is unavailable.
 """
@@ -12,12 +12,13 @@ import requests
 
 from app.config import settings
 
-_XAI_CHAT_URL = "https://api.x.ai/v1/chat/completions"
-_MODEL = "grok-3-mini"
+_MODEL = "gemini-2.5-flash"
+_GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{_MODEL}:generateContent"
+
 _log = logging.getLogger(__name__)
 
 
-# ── Built-in fallback advice (when xAI API is unavailable) ────
+# ── Built-in fallback advice (when Gemini API is unavailable) ────
 _FALLBACK_ADVICE = {
     "High": (
         "1. Do NOT click any links or download attachments from this message.\n"
@@ -51,9 +52,10 @@ def _build_prompt(text: str, scan_type: str, risk_level: str, indicators: list[s
         f"with these scam indicators: {indicator_str}.\n\n"
         "Your role is a cybersecurity advisor at ScamShield. "
         "Provide clear, concise, actionable precautions the user should take RIGHT NOW. "
+        "CRITICAL: You MUST specifically mention the exact details from the user's message (e.g., the specific company name, the exact amount of money promised like '₹25,000', or the specific suspicious URL) in your advice to prove this is a custom analysis. "
         "Format your response as a short numbered list (3-5 points). "
         "If risk is Low, still give gentle safety reminders. "
-        "Keep each point on one line. Do NOT include markdown headers, just the numbered list."
+        "Keep each point on one line. Do NOT include markdown headers or bold text, just the numbered list."
     )
 
 
@@ -64,62 +66,74 @@ def get_precaution_advice(
     indicators: list[str],
 ) -> Optional[str]:
     """
-    Call xAI Grok API and return a precautionary advice string.
+    Call Google Gemini API and return a precautionary advice string.
     Falls back to built-in advice if the API is unavailable.
     """
-    api_key = settings.XAI_API_KEY
+    api_key = settings.GEMINI_API_KEY
 
     # Guard: reject empty or un-replaced placeholder
-    if not api_key or api_key.strip() in ("", "your-xai-api-key-here"):
-        print("[xAI] ⚠️  XAI_API_KEY is not set – using fallback advice.")
+    if not api_key or api_key.strip() in ("", "your-gemini-api-key-here"):
+        print("[Gemini] ⚠️  GEMINI_API_KEY is not set – using fallback advice.")
         return _FALLBACK_ADVICE.get(risk_level, _FALLBACK_ADVICE["Low"])
 
-    print(f"[xAI] 🔑 Key loaded (last 8 chars: ...{api_key[-8:]})")
-    print(f"[xAI] 📡 Calling {_MODEL} for '{risk_level}' risk scan...")
+    print(f"[Gemini] 🔑 Key loaded (last 8 chars: ...{api_key[-8:]})")
+    print(f"[Gemini] 📡 Calling {_MODEL} for '{risk_level}' risk scan...")
 
     prompt = _build_prompt(text, scan_type, risk_level, indicators)
 
     payload = {
-        "model": _MODEL,
-        "messages": [
+        "systemInstruction": {
+            "parts": [
+                {
+                    "text": (
+                        "You are ScamShield's cybersecurity precaution advisor. "
+                        "Always respond in plain English with a numbered list of practical safety steps. "
+                        "Be concise, empathetic, and avoid technical jargon."
+                    )
+                }
+            ]
+        },
+        "contents": [
             {
-                "role": "system",
-                "content": (
-                    "You are ScamShield's cybersecurity precaution advisor. "
-                    "Always respond in plain English with a numbered list of practical safety steps. "
-                    "Be concise, empathetic, and avoid technical jargon."
-                ),
-            },
-            {"role": "user", "content": prompt},
+                "parts": [
+                    {
+                        "text": prompt
+                    }
+                ]
+            }
         ],
-        "max_tokens": 400,
-        "temperature": 0.4,
+        "generationConfig": {
+            "maxOutputTokens": 400,
+            "temperature": 0.4
+        }
     }
 
     try:
+        url = f"{_GEMINI_API_URL}?key={api_key}"
         resp = requests.post(
-            _XAI_CHAT_URL,
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {api_key}",
-            },
+            url,
+            headers={"Content-Type": "application/json"},
             json=payload,
             timeout=15,
         )
 
         if resp.status_code == 200:
             body = resp.json()
-            advice = body["choices"][0]["message"]["content"].strip()
-            print(f"[xAI] ✅ Grok responded ({len(advice)} chars): {advice[:80]}...")
-            return advice
+            try:
+                advice = body["candidates"][0]["content"]["parts"][0]["text"].strip()
+                print(f"[Gemini] ✅ Responded ({len(advice)} chars): {advice[:80]}...")
+                return advice
+            except (KeyError, IndexError) as err:
+                print(f"[Gemini] ❌ Could not parse response correctly: {err}")
+                return _FALLBACK_ADVICE.get(risk_level, _FALLBACK_ADVICE["Low"])
         else:
-            print(f"[xAI] ❌ HTTP {resp.status_code}: {resp.text[:200]}")
-            print("[xAI] ↩️  Using fallback advice instead.")
-            _log.warning("xAI HTTP %s: %s", resp.status_code, resp.text[:200])
+            print(f"[Gemini] ❌ HTTP {resp.status_code}: {resp.text[:200]}")
+            print("[Gemini] ↩️  Using fallback advice instead.")
+            _log.warning("Gemini HTTP %s: %s", resp.status_code, resp.text[:200])
             return _FALLBACK_ADVICE.get(risk_level, _FALLBACK_ADVICE["Low"])
 
     except requests.RequestException as exc:
-        print(f"[xAI] ❌ Request failed: {exc}")
-        print("[xAI] ↩️  Using fallback advice instead.")
-        _log.warning("xAI request failed: %s", exc)
+        print(f"[Gemini] ❌ Request failed: {exc}")
+        print("[Gemini] ↩️  Using fallback advice instead.")
+        _log.warning("Gemini request failed: %s", exc)
         return _FALLBACK_ADVICE.get(risk_level, _FALLBACK_ADVICE["Low"])
