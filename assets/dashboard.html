@@ -48,20 +48,16 @@
                 <div>
                     <h1 class="dashboard-title">Welcome back, <span id="dashboardUserName">Analyst</span>.</h1>
                     <p class="dashboard-subtitle">
-                        Review recent AI scans, see reported scams and validate patterns for your final‑year analysis
-                        chapter.
+                        Review your AI scan history, monitor reported scams and track threat trends across all channels.
                     </p>
                 </div>
-                <div class="badge-soft">Demo mode · Connect /history &amp; /report</div>
             </header>
 
             <div class="dashboard-grid">
                 <section class="card">
                     <header class="card-header">
                         <h2 class="card-title">Recent scans</h2>
-                        <p class="card-subtitle">
-                            Dummy data populated on load. Replace with data from your <code>/history</code> endpoint.
-                        </p>
+                        <p class="card-subtitle">Your most recent AI scans will appear here.</p>
                     </header>
                     <div style="overflow-x: auto;">
                         <table class="table" id="scanHistoryTable">
@@ -107,6 +103,7 @@
         </div>
     </footer>
 
+    <script src="js/auth-guard.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/matrix.js"></script>
     <script src="js/transitions.js"></script>

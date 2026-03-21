@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -38,14 +38,15 @@
         <span class="nav-toggle-bar"></span>
       </button>
       <nav class="nav-menu" id="nav-menu" aria-label="Primary">
-        <div class="nav-links">
+        <div class="nav-links" id="nav-protected-links" style="display:none">
           <a class="nav-link" href="scan.html">Scan</a>
           <a class="nav-link" href="report.html">Report Scam</a>
           <a class="nav-link" href="dashboard.html">Dashboard</a>
         </div>
-        <div class="nav-auth-links">
-          <a class="nav-link" href="login.html">Login</a>
-          <a class="nav-link primary" href="register.html">Get Started</a>
+        <div class="nav-auth-links" id="nav-auth-links">
+          <a class="nav-link" href="login.html" id="nav-login-btn">Login</a>
+          <a class="nav-link primary" href="register.html" id="nav-register-btn">Get Started</a>
+          <button class="nav-link primary" id="nav-logout-btn" type="button" style="display:none;cursor:pointer;border:none">Logout</button>
         </div>
       </nav>
     </div>
@@ -145,7 +146,7 @@
               </div>
 
               <div class="ix-model-row">
-                <span class="ix-model-tag">scamshield-v1 · demo</span>
+                <span class="ix-model-tag">scamshield-v1 · live</span>
                 <span class="ix-verified">✓ Verified</span>
               </div>
             </div>
@@ -234,7 +235,7 @@
             <h3 class="ix-feat-h">Analyst dashboard</h3>
             <p class="ix-feat-p">Review scan history, see reported scams and export anonymized data for your research —
               all in one clean dashboard view.</p>
-            <span class="ix-feat-tag">Final-year ready</span>
+            <span class="ix-feat-tag">Enterprise Ready</span>
           </article>
         </div>
       </div>
@@ -454,9 +455,7 @@
       <div class="container">
         <div class="ix-disc ir-up">
           <span class="ix-disc-icon">⚠</span>
-          <p><strong>Disclaimer:</strong> ScamShield is an educational prototype for research and awareness. AI
-            predictions are probabilistic and must not be treated as legal or financial advice. Always verify with
-            official sources before acting.</p>
+          <p><strong>Transparency notice:</strong> ScamShield uses AI models to assess the likelihood of scam content. Predictions are probabilistic — always verify with official sources before taking action.</p>
         </div>
       </div>
     </section>
@@ -576,6 +575,34 @@
   <script>
     /* year */
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    /* ── Navbar auth state ── */
+    (function () {
+      var isLoggedIn = false;
+      try { isLoggedIn = !!window.localStorage.getItem('scamshieldUser'); } catch (e) {}
+
+      var protectedLinks = document.getElementById('nav-protected-links');
+      var loginBtn       = document.getElementById('nav-login-btn');
+      var registerBtn    = document.getElementById('nav-register-btn');
+      var logoutBtn      = document.getElementById('nav-logout-btn');
+
+      if (isLoggedIn) {
+        if (protectedLinks) protectedLinks.style.display = '';
+        if (loginBtn)    loginBtn.style.display    = 'none';
+        if (registerBtn) registerBtn.style.display = 'none';
+        if (logoutBtn)   logoutBtn.style.display   = '';
+
+        if (logoutBtn) {
+          logoutBtn.addEventListener('click', function () {
+            try {
+              window.localStorage.removeItem('scamshieldUser');
+              window.localStorage.removeItem('scamshieldToken');
+            } catch (e) {}
+            window.location.reload();
+          });
+        }
+      }
+    })();
 
     /* navbar shrink */
     (function () {

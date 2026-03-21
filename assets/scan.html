@@ -30,14 +30,15 @@
             </button>
 
             <nav class="nav-menu" id="nav-menu" aria-label="Primary">
-                <div class="nav-links">
+                <div class="nav-links" id="nav-protected-links">
                     <a class="nav-link" href="scan.html">Scan</a>
                     <a class="nav-link" href="report.html">Report Scam</a>
                     <a class="nav-link" href="dashboard.html">Dashboard</a>
                 </div>
-                <div class="nav-auth-links">
-                    <a class="nav-link" href="login.html">Login</a>
-                    <a class="nav-link primary" href="register.html">Get Started</a>
+                <div class="nav-auth-links" id="nav-auth-links">
+                    <a class="nav-link" href="login.html" id="nav-login-btn">Login</a>
+                    <a class="nav-link primary" href="register.html" id="nav-register-btn">Get Started</a>
+                    <button class="nav-link primary" id="nav-logout-btn" type="button" style="display:none;cursor:pointer;border:none">Logout</button>
                 </div>
             </nav>
         </div>
@@ -49,8 +50,7 @@
                 <div class="section-kicker">Instant AI scan</div>
                 <h1 class="section-title">Scan a suspicious message or URL</h1>
                 <p class="section-subtitle" style="text-align: left;">
-                    Enter any text, SMS, email snippet or website link. ScamShield will simulate a call to your
-                    <code>/predict</code> backend endpoint and display a risk level, score and explanation.
+                    Enter any text, SMS, email snippet or website link. ScamShield will analyse it using our AI engine and provide a real-time risk level, confidence score and explanation.
                 </p>
             </div>
 
@@ -81,14 +81,12 @@
                                 placeholder="Example: Dear customer, your bank account will be suspended in 24 hours. Click https://secure-verification-update.com to update your KYC."
                                 required></textarea>
                             <div id="scanInputError" class="field-error"></div>
-                            <p class="field-hint">
-                                Do not paste passwords or OTPs. This demo does not send data to any server until you
-                                implement the
-                                <code>/predict</code> API.
-                            </p>
                         </div>
 
                         <div class="form-actions justify-end">
+                            <p class="field-hint" style="margin-right:auto;">
+                                🔒 Submitted content is processed by our AI engine and your scan results are stored securely in your account history. Do not paste passwords or OTPs.
+                            </p>
                             <button type="submit" class="btn btn-primary" id="scanButton">Run AI scan</button>
                         </div>
                     </form>
@@ -98,8 +96,7 @@
                     <header class="card-header">
                         <h2 class="card-title">Risk assessment</h2>
                         <p class="card-subtitle">
-                            Below is a dummy response that simulates what your backend model could return. Connect it to
-                            <code>/predict</code> later.
+                            AI-powered analysis from your ScamShield backend.
                         </p>
                     </header>
                     <div id="scanResultEmpty" class="text-muted">
@@ -114,16 +111,17 @@
                             </span>
                             <span class="risk-score">Score: <span id="riskScore">72</span>%</span>
                         </div>
-                        <p class="risk-explanation" id="riskExplanation">
-                            Dummy explanation will appear here, highlighting phishing indicators such as fake domains,
-                            urgency tactics and
-                            financial bait.
-                        </p>
-                        <div class="mt-md">
-                            <div class="field-hint">
-                                <strong>Dummy JSON preview:</strong>
-                                <pre id="scanJsonPreview" style="font-size: 0.75rem; margin-top: 0.4rem;"></pre>
+                        <p class="risk-explanation" id="riskExplanation"></p>
+
+                        <!-- xAI Grok Precaution Panel -->
+                        <div id="precautionPanel" style="display:none;" class="precaution-panel">
+                            <div class="precaution-header">
+                                <span class="precaution-icon">🛡️</span>
+                                <strong>AI Safety Advice</strong>
+                                <span class="precaution-badge">ScamShield AI</span>
                             </div>
+                            <ol id="precautionList" class="precaution-list"></ol>
+                        </div>
                         </div>
                     </div>
                 </aside>
@@ -133,7 +131,7 @@
 
     <footer class="footer">
         <div class="container footer-inner">
-            <div>© <span id="year"></span> ScamShield. Educational prototype.</div>
+            <div>© <span id="year"></span> ScamShield. AI-powered scam protection.</div>
             <div class="footer-links">
                 <a class="footer-link" href="index.html">Home</a>
                 <a class="footer-link" href="report.html">Report</a>
@@ -142,9 +140,30 @@
         </div>
     </footer>
 
+    <script src="js/auth-guard.js"></script>
     <script src="js/scan.js"></script>
     <script src="js/matrix.js"></script>
     <script src="js/transitions.js"></script>
+    <script>
+        (function () {
+            var isLoggedIn = false;
+            try { isLoggedIn = !!window.localStorage.getItem('scamshieldUser'); } catch (e) {}
+            var loginBtn    = document.getElementById('nav-login-btn');
+            var registerBtn = document.getElementById('nav-register-btn');
+            var logoutBtn   = document.getElementById('nav-logout-btn');
+            if (isLoggedIn) {
+                if (loginBtn)    loginBtn.style.display    = 'none';
+                if (registerBtn) registerBtn.style.display = 'none';
+                if (logoutBtn)   logoutBtn.style.display   = '';
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', function () {
+                        try { window.localStorage.removeItem('scamshieldUser'); window.localStorage.removeItem('scamshieldToken'); } catch (e) {}
+                        window.location.href = 'index.html';
+                    });
+                }
+            }
+        })();
+    </script>
 </body>
 
 </html>

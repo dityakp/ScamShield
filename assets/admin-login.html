@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login – ScamShield</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ── Admin Login Specific ─────────────────────────── */
+    :root {
+      --admin-accent: #f59e0b;
+      --admin-accent-soft: rgba(245, 158, 11, 0.12);
+      --admin-accent-glow: rgba(245, 158, 11, 0.4);
+    }
+
+    body { background: #000; overflow: hidden; position: relative; }
+
+    /* Animated background */
+    .adm-bg {
+      position: fixed; inset: 0; z-index: 0; overflow: hidden;
+    }
+    .adm-orb {
+      position: absolute; border-radius: 50%; pointer-events: none;
+      filter: blur(120px); animation: orb-drift 18s ease-in-out infinite alternate;
+    }
+    .adm-orb-a {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(245, 158, 11, .15), transparent 70%);
+      top: -150px; left: -150px;
+    }
+    .adm-orb-b {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(0, 183, 255, .1), transparent 70%);
+      bottom: -100px; right: -100px;
+      animation-direction: alternate-reverse; animation-duration: 22s;
+    }
+    @keyframes orb-drift {
+      to { transform: translate(5%, 6%) scale(1.08); }
+    }
+
+    /* Centered login card */
+    .adm-wrap {
+      position: relative; z-index: 1;
+      min-height: 100vh; display: flex; align-items: center;
+      justify-content: center; padding: 2rem;
+    }
+
+    .adm-card {
+      background: rgba(0, 8, 30, 0.7);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(245, 158, 11, .2);
+      border-radius: 20px;
+      padding: 2.8rem 2.5rem 2.5rem;
+      width: 100%; max-width: 420px;
+      box-shadow: 0 24px 80px rgba(0,0,0,.7), 0 0 60px rgba(245,158,11,.06);
+    }
+
+    /* Brand at top */
+    .adm-brand {
+      display: flex; align-items: center; gap: .75rem;
+      margin-bottom: 1.8rem;
+    }
+    .adm-brand-mark {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 20px rgba(245,158,11,.5);
+      font-size: 1rem;
+    }
+    .adm-brand-text { font-size: .8rem; font-weight: 700; color: #fff; }
+    .adm-brand-sub {
+      font-size: .62rem; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--admin-accent); font-family: 'Courier New', monospace;
+      display: block;
+    }
+
+    /* Shield badge */
+    .adm-shield {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .3rem 1rem; border-radius: 999px;
+      border: 1px solid rgba(245, 158, 11, .4);
+      background: var(--admin-accent-soft);
+      color: var(--admin-accent);
+      font-size: .65rem; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; font-family: 'Courier New', monospace;
+      margin-bottom: 1.2rem;
+    }
+    .adm-shield-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--admin-accent);
+      box-shadow: 0 0 10px var(--admin-accent);
+      animation: shield-pulse 2s ease-in-out infinite;
+    }
+    @keyframes shield-pulse { 50% { box-shadow: 0 0 20px var(--admin-accent); } }
+
+    .adm-title {
+      font-size: 1.6rem; font-weight: 900; color: #fff;
+      letter-spacing: -.02em; margin: 0 0 .5rem;
+    }
+    .adm-sub {
+      font-size: .85rem; color: rgba(226, 232, 240, .5);
+      margin: 0 0 1.8rem; line-height: 1.5;
+    }
+
+    /* Form */
+    .adm-field { margin-bottom: 1.1rem; }
+    .adm-label {
+      display: block; font-size: .75rem; font-weight: 600;
+      color: rgba(226, 232, 240, .7); margin-bottom: .4rem;
+      letter-spacing: .04em;
+    }
+    .adm-input {
+      width: 100%; background: rgba(0, 0, 0, .5);
+      border: 1px solid rgba(245, 158, 11, .15);
+      border-radius: 10px; padding: .7rem 1rem;
+      color: #fff; font-size: .9rem; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      box-sizing: border-box;
+    }
+    .adm-input:focus {
+      border-color: rgba(245, 158, 11, .5);
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, .08);
+    }
+    .adm-pw-wrap { position: relative; }
+    .adm-pw-toggle {
+      position: absolute; right: .75rem; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: rgba(226,232,240,.5); cursor: pointer;
+      padding: .25rem; display: flex; align-items: center;
+    }
+    .adm-pw-toggle:hover { color: var(--admin-accent); }
+    .adm-eye { width: 16px; height: 16px; }
+
+    .adm-error {
+      font-size: .75rem; color: #f87171; margin-top: .3rem;
+      min-height: 1rem;
+    }
+
+    .adm-btn {
+      width: 100%; padding: .85rem; border-radius: 10px; border: none;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #000; font-size: .95rem; font-weight: 700; cursor: pointer;
+      letter-spacing: .02em; transition: opacity .2s, transform .2s;
+      position: relative; overflow: hidden; margin-top: .5rem;
+    }
+    .adm-btn:hover { opacity: .92; transform: translateY(-1px); }
+    .adm-btn:active { transform: translateY(0); }
+    .adm-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+    .adm-back {
+      display: block; text-align: center; margin-top: 1.4rem;
+      font-size: .78rem; color: rgba(226,232,240,.4);
+      text-decoration: none; transition: color .2s;
+    }
+    .adm-back:hover { color: var(--admin-accent); }
+
+    @media (max-width: 480px) {
+      .adm-card { padding: 2rem 1.4rem; }
+      .adm-title { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Animated BG -->
+  <div class="adm-bg">
+    <div class="adm-orb adm-orb-a"></div>
+    <div class="adm-orb adm-orb-b"></div>
+  </div>
+
+  <div class="adm-wrap">
+    <div class="adm-card">
+      <!-- Brand -->
+      <div class="adm-brand">
+        <div class="adm-brand-mark">🛡</div>
+        <div>
+          <div class="adm-brand-text">ScamShield</div>
+          <span class="adm-brand-sub">Admin Portal</span>
+        </div>
+      </div>
+
+      <!-- Badge -->
+      <div class="adm-shield">
+        <span class="adm-shield-dot"></span>
+        Restricted Access
+      </div>
+
+      <h1 class="adm-title">Admin Sign In</h1>
+      <p class="adm-sub">This portal is restricted to authorised administrators only.</p>
+
+      <!-- Form -->
+      <form id="admin-login-form" novalidate>
+        <div class="adm-field">
+          <label class="adm-label" for="adminEmail">Email address</label>
+          <input id="adminEmail" class="adm-input" type="email"
+            placeholder="admin@scamshield.io" autocomplete="email" required />
+          <div id="adminEmailErr" class="adm-error"></div>
+        </div>
+
+        <div class="adm-field">
+          <label class="adm-label" for="adminPassword">Password</label>
+          <div class="adm-pw-wrap">
+            <input id="adminPassword" class="adm-input" type="password"
+              placeholder="••••••••" autocomplete="current-password" required
+              style="padding-right:2.5rem" />
+            <button type="button" class="adm-pw-toggle" id="pwToggle" aria-label="Toggle password">
+              <svg class="adm-eye" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <div id="adminPwErr" class="adm-error"></div>
+        </div>
+
+        <div id="adminGeneralErr" class="adm-error" style="margin-bottom:.5rem"></div>
+
+        <button type="submit" class="adm-btn" id="adminLoginBtn">
+          Sign in as Admin
+        </button>
+      </form>
+
+      <a href="index.html" class="adm-back">← Back to ScamShield home</a>
+    </div>
+  </div>
+
+  <script>
+    const API = 'http://localhost:8000';
+
+    // Redirect if already logged in as admin
+    if (localStorage.getItem('adminToken')) {
+      window.location.href = 'admin-dashboard.html';
+    }
+
+    // Password toggle
+    document.getElementById('pwToggle').addEventListener('click', () => {
+      const input = document.getElementById('adminPassword');
+      input.type = input.type === 'password' ? 'text' : 'password';
+    });
+
+    // Form submit
+    document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('adminLoginBtn');
+      const emailErr = document.getElementById('adminEmailErr');
+      const pwErr = document.getElementById('adminPwErr');
+      const generalErr = document.getElementById('adminGeneralErr');
+
+      emailErr.textContent = '';
+      pwErr.textContent = '';
+      generalErr.textContent = '';
+
+      const email = document.getElementById('adminEmail').value.trim();
+      const password = document.getElementById('adminPassword').value;
+
+      if (!email) { emailErr.textContent = 'Email is required.'; return; }
+      if (!password) { pwErr.textContent = 'Password is required.'; return; }
+
+      btn.disabled = true;
+      btn.textContent = 'Signing in…';
+
+      try {
+        const res = await fetch(`${API}/api/admin/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          localStorage.setItem('adminToken', data.access_token);
+          localStorage.setItem('adminUser', JSON.stringify(data.admin));
+          window.location.href = 'admin-dashboard.html';
+        } else {
+          const err = await res.json();
+          generalErr.textContent = err.detail || 'Login failed. Check credentials.';
+          btn.disabled = false;
+          btn.textContent = 'Sign in as Admin';
+        }
+      } catch {
+        generalErr.textContent = 'Cannot reach server. Make sure the backend is running.';
+        btn.disabled = false;
+        btn.textContent = 'Sign in as Admin';
+      }
+    });
+  </script>
+</body>
+</html>

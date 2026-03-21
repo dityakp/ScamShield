@@ -1,0 +1,36 @@
+# ─── FastAPI & Server ─────────────────────────────────────────
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+
+# ─── Database (requires PostgreSQL 16+ installed locally or via Docker) ───
+sqlalchemy==2.0.36
+psycopg2-binary==2.9.11          # PostgreSQL adapter — needs a running PG server
+alembic==1.14.1
+
+# ─── Authentication ───────────────────────────────────────────
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]==3.3.0
+bcrypt==4.2.1
+
+# ─── Validation & Config ─────────────────────────────────────
+pydantic==2.12.5
+pydantic-settings==2.13.1
+email-validator==2.2.0
+
+# ─── Security / Rate Limiting ────────────────────────────────
+slowapi==0.1.9
+
+# ─── ML Pipeline ─────────────────────────────────────────────
+scikit-learn==1.8.0
+joblib==1.5.3
+pandas==3.0.1
+numpy==2.4.2
+datasets>=2.19.0
+gdown>=5.2.0
+
+# ─── CORS ─────────────────────────────────────────────────────
+# (built into FastAPI via starlette)
+
+# ─── xAI API ──────────────────────────────────────────────────
+requests>=2.31.0
