@@ -104,3 +104,70 @@ class DashboardStats(BaseModel):
     total_reports: int
     recent_scans: List[ScanHistoryItem]
     recent_reports: List[ReportHistoryItem]
+
+
+# ── Admin ──────────────────────────────────────────────────────
+
+class AdminLoginRequest(BaseModel):
+    email: EmailStr
+    password: str = Field(..., min_length=1)
+
+
+class AdminTokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    admin: UserOut
+
+
+class AdminUserItem(BaseModel):
+    id: int
+    name: str
+    email: str
+    is_admin: bool
+    is_active: bool
+    created_at: datetime
+    scan_count: int
+    report_count: int
+
+    class Config:
+        from_attributes = True
+
+
+class AdminScanItem(BaseModel):
+    id: int
+    user_id: int
+    user_email: str
+    scan_type: str
+    snippet: str          # first 80 chars of input
+    risk_level: str
+    risk_score: float
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class AdminReportItem(BaseModel):
+    id: int
+    user_id: int
+    user_email: str
+    scam_type: str
+    channel: Optional[str]
+    identifier: Optional[str]
+    description: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class AdminStats(BaseModel):
+    total_users: int
+    total_scans: int
+    total_reports: int
+    high_risk_count: int
+    medium_risk_count: int
+    low_risk_count: int
+    scans_today: int
+    reports_today: int
+    new_users_today: int
