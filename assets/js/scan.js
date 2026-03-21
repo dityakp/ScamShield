@@ -203,12 +203,12 @@
                 riskScoreEl.textContent = res.risk_score;
                 explanationEl.textContent = res.explanation;
 
-                // ── Render xAI precaution advice ──
+                // ── Render Gemini precaution advice ──
                 var precautionPanel = $('precautionPanel');
                 var precautionList  = $('precautionList');
                 if (precautionPanel && precautionList && res.precaution) {
                     precautionList.innerHTML = '';
-                    // Grok returns a numbered list; split by newlines and strip leading numbers
+                    // Gemini returns a numbered list; split by newlines and strip leading numbers
                     var lines = res.precaution.split('\n').filter(function(l) { return l.trim(); });
                     lines.forEach(function (line) {
                         // Strip leading "1. ", "2. " etc.
