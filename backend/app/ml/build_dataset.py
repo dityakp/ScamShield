@@ -1,19 +1,32 @@
 """
-Download multiple public spam/scam/phishing datasets from the web and build
-a single comprehensive training CSV: app/ml/data/sample_scams.csv
+Download multiple public spam/scam/phishing datasets from the web and MERGE
+them into the training CSV (without overwriting an existing large dataset).
 
 Sources (all fetched automatically):
   1. UCI SMS Spam Collection          – 5,574 SMS (GitHub mirror)
   2. Kaggle SMS Spam Collection       – ~5,572 SMS (GitHub mirror, slightly different encoding)
   3. Combined Smishing Dataset        – ~5,000+ labeled smishing SMS (GitHub)
   4. Hand-crafted Indian scam + safe  – ~240 messages
+  5. (Optional) Enron emails (HF)     – large SAFE/HAM baseline (label=0)
+  6. (Optional) Enron spam (HF)       – labeled spam/ham email dataset
 
 Usage:
     cd backend
     python -m app.ml.build_dataset
+
+Examples:
+    # Append Hugging Face Enron ham to your existing CSV
+    python -m app.ml.build_dataset --hf-enron-ham --hf-limit 200000
+
+    # Append labeled Enron spam dataset
+    python -m app.ml.build_dataset --hf-enron-spam
 """
 
+from __future__ import annotations
+
+import argparse
 import csv
+import shutil
 import urllib.request
 from pathlib import Path
 
@@ -21,6 +34,9 @@ DATA_DIR = Path(__file__).parent / "data"
 OUTPUT_PATH = DATA_DIR / "sample_scams.csv"
 
 HEADERS = {"User-Agent": "ScamShield/1.0"}
+
+HF_ENRON_EMAILS = "corbt/enron-emails"
+HF_ENRON_SPAM = "SetFit/enron_spam"
 
 
 def _fetch(url: str, timeout: int = 30) -> str:
@@ -39,7 +55,7 @@ def download_uci_sms() -> list:
     try:
         raw = _fetch(UCI_URL)
     except Exception as e:
-        print(f"  ⚠ Failed: {e}")
+        print(f"  [WARN] Failed: {e}")
         return []
     rows = []
     for line in raw.strip().split("\n"):
@@ -52,7 +68,7 @@ def download_uci_sms() -> list:
         label = 1 if lbl.lower() == "spam" else 0
         if text:
             rows.append((text, label))
-    print(f"  ✓ {len(rows)} messages  (spam={sum(1 for _,l in rows if l==1)})")
+    print(f"  [OK] {len(rows)} messages  (spam={sum(1 for _,l in rows if l==1)})")
     return rows
 
 
@@ -65,7 +81,7 @@ def download_kaggle_spam() -> list:
     try:
         raw = _fetch(KAGGLE_URL)
     except Exception as e:
-        print(f"  ⚠ Failed: {e}")
+        print(f"  [WARN] Failed: {e}")
         return []
     rows = []
     import io
@@ -81,7 +97,7 @@ def download_kaggle_spam() -> list:
         label = 1 if lbl.lower() == "spam" else 0
         if text and len(text) > 5:
             rows.append((text, label))
-    print(f"  ✓ {len(rows)} messages  (spam={sum(1 for _,l in rows if l==1)})")
+    print(f"  [OK] {len(rows)} messages  (spam={sum(1 for _,l in rows if l==1)})")
     return rows
 
 
@@ -94,7 +110,7 @@ def download_smishing() -> list:
     try:
         raw = _fetch(SMISHING_URL)
     except Exception as e:
-        print(f"  ⚠ Failed: {e}")
+        print(f"  [WARN] Failed: {e}")
         return []
     rows = []
     import io
@@ -127,7 +143,94 @@ def download_smishing() -> list:
                 except ValueError:
                     continue
         rows.append((text, label))
-    print(f"  ✓ {len(rows)} messages  (smishing/spam={sum(1 for _,l in rows if l==1)})")
+    print(f"  [OK] {len(rows)} messages  (smishing/spam={sum(1 for _,l in rows if l==1)})")
+    return rows
+
+
+# ── Source 5/6: Hugging Face email datasets ────────────────────
+def _pick_text_from_example(example: dict) -> str | None:
+    for key in ("text", "body", "message", "email", "content", "raw"):
+        v = example.get(key)
+        if isinstance(v, str) and v.strip():
+            return v.strip()
+    for v in example.values():
+        if isinstance(v, str):
+            s = v.strip()
+            if len(s) >= 40:
+                return s
+    return None
+
+
+def download_hf_enron_ham(limit: int = 0) -> list:
+    """Download Enron emails (unlabeled) and treat as SAFE/HAM (label=0)."""
+    print("[HF] Downloading Enron emails (ham baseline)...")
+    try:
+        from datasets import load_dataset  # type: ignore
+    except Exception as e:
+        print(f"  [WARN] datasets not installed/working: {e}")
+        print("    Install with: pip install datasets")
+        return []
+
+    try:
+        dset = load_dataset(HF_ENRON_EMAILS)
+    except Exception as e:
+        print(f"  [WARN] Failed to load {HF_ENRON_EMAILS}: {e}")
+        return []
+
+    split_name = "train" if "train" in dset else list(dset.keys())[0]
+    split = dset[split_name]
+
+    rows: list[tuple[str, int]] = []
+    for i, ex in enumerate(split):
+        if limit and i >= limit:
+            break
+        text = _pick_text_from_example(ex)
+        if not text or len(text) < 10:
+            continue
+        rows.append((text, 0))
+
+    print(f"  [OK] {len(rows)} emails (label=0)")
+    return rows
+
+
+def download_hf_enron_spam(limit: int = 0) -> list:
+    """Download labeled Enron spam dataset (ham/spam labels)."""
+    print("[HF] Downloading Enron spam (labeled)...")
+    try:
+        from datasets import load_dataset  # type: ignore
+    except Exception as e:
+        print(f"  [WARN] datasets not installed/working: {e}")
+        print("    Install with: pip install datasets")
+        return []
+
+    try:
+        dset = load_dataset(HF_ENRON_SPAM)
+    except Exception as e:
+        print(f"  [WARN] Failed to load {HF_ENRON_SPAM}: {e}")
+        return []
+
+    split_name = "train" if "train" in dset else list(dset.keys())[0]
+    split = dset[split_name]
+
+    rows: list[tuple[str, int]] = []
+    for i, ex in enumerate(split):
+        if limit and i >= limit:
+            break
+        text = _pick_text_from_example(ex)
+        if not text or len(text) < 10:
+            continue
+        lbl = ex.get("label")
+        if isinstance(lbl, bool):
+            label = 1 if lbl else 0
+        else:
+            try:
+                label = int(lbl)
+            except Exception:
+                s = str(lbl).strip().lower()
+                label = 1 if s in {"spam", "scam", "phishing"} else 0
+        rows.append((text, 1 if label == 1 else 0))
+
+    print(f"  [OK] {len(rows)} emails  (spam={sum(1 for _,l in rows if l==1)})")
     return rows
 
 
@@ -366,8 +469,13 @@ HANDCRAFTED_DATA = [
 ]
 
 
-def build_dataset():
-    """Merge all sources into a single sample_scams.csv."""
+def build_dataset(
+    *,
+    hf_enron_ham: bool = False,
+    hf_enron_spam: bool = False,
+    hf_limit: int = 0,
+) -> Path:
+    """Append secondary sources into sample_scams.csv (does not overwrite full dataset)."""
     DATA_DIR.mkdir(parents=True, exist_ok=True)
 
     all_rows = []
@@ -382,6 +490,12 @@ def build_dataset():
     print(f"[4/4] Adding {len(HANDCRAFTED_DATA)} hand-crafted samples...")
     all_rows.extend(HANDCRAFTED_DATA)
 
+    # Optional HF sources (large)
+    if hf_enron_ham:
+        all_rows.extend(download_hf_enron_ham(limit=hf_limit))
+    if hf_enron_spam:
+        all_rows.extend(download_hf_enron_spam(limit=hf_limit))
+
     # Deduplicate
     seen = set()
     unique = []
@@ -394,27 +508,48 @@ def build_dataset():
     scam = sum(1 for _, l in unique if l == 1)
     safe = sum(1 for _, l in unique if l == 0)
 
-    print(f"\n── Final Dataset ───────────────────────────")
+    print("\n== Final Dataset ===========================")
     print(f"  Total unique samples:  {len(unique)}")
     print(f"  Scam/Spam (label=1):   {scam}")
     print(f"  Safe/Ham  (label=0):   {safe}")
 
-    with open(OUTPUT_PATH, "w", newline="", encoding="utf-8") as f:
+    # Backup if the file already exists, then append (or create new)
+    if OUTPUT_PATH.exists():
+        bak = OUTPUT_PATH.with_suffix(OUTPUT_PATH.suffix + ".bak")
+        try:
+            shutil.copy2(OUTPUT_PATH, bak)
+            print(f"  [OK] Backup created: {bak.name}")
+        except Exception as e:
+            print(f"  [WARN] Could not create backup: {e}")
+
+    file_exists = OUTPUT_PATH.exists()
+    with open(OUTPUT_PATH, "a" if file_exists else "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
-        writer.writerow(["text", "label"])
+        if not file_exists:
+            writer.writerow(["text", "label"])
         for text, label in unique:
             writer.writerow([text, label])
 
-    print(f"\n  ✓ Saved to {OUTPUT_PATH}")
+    print(f"\n  [OK] Saved to {OUTPUT_PATH}")
 
     # Clean up old training_data.csv if it exists
     old = DATA_DIR / "training_data.csv"
     if old.exists():
         old.unlink()
-        print(f"  ✓ Removed old {old.name}")
+        print(f"  [OK] Removed old {old.name}")
 
     return OUTPUT_PATH
 
 
 if __name__ == "__main__":
-    build_dataset()
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--hf-enron-ham", action="store_true", help="Append Enron emails as label=0")
+    ap.add_argument("--hf-enron-spam", action="store_true", help="Append labeled Enron spam dataset")
+    ap.add_argument("--hf-limit", type=int, default=0, help="Max HF rows per dataset (0 = no limit)")
+    args = ap.parse_args()
+
+    build_dataset(
+        hf_enron_ham=args.hf_enron_ham,
+        hf_enron_spam=args.hf_enron_spam,
+        hf_limit=args.hf_limit,
+    )
