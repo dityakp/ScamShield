@@ -74,7 +74,7 @@
 /* ══ HERO ═════════════════════════════════════════ */
 .ix-hero {
     position: relative;
-    min-height: 100vh;
+    min-height: 100svh;
     display: flex;
     align-items: center;
     padding: calc(var(--nav-height) + 2rem) 0 5rem;
@@ -1482,3 +1482,78 @@
     gap: .38rem;
     flex-shrink: 0;
 }
+
+/* ══ RESPONSIVE HEIGHT AND LAPTOP FIXES ══════════ */
+
+/* 950px - Desktop view but shorter monitors / Windows 125% scaling */
+@media (max-height: 950px) and (min-width: 961px) {
+  .ix-hero {
+    padding: calc(var(--nav-height) + 1.5rem) 0 2rem;
+  }
+  .ix-hero-inner {
+    gap: 2.5rem;
+  }
+  .ix-h1 {
+    font-size: clamp(2.2rem, 4.2vw, 3.7rem);
+    margin: 0 0 1rem;
+    line-height: 1.05;
+  }
+  .ix-lead {
+    margin: 0 0 1.5rem;
+    font-size: clamp(0.9rem, 1.1vw, 1.05rem);
+  }
+  .ix-badge {
+    margin-bottom: 0.8rem;
+  }
+}
+
+/* 780px - High scaling laptops (150%) or compact laptops */
+@media (max-height: 780px) and (min-width: 961px) {
+  .ix-hero {
+    padding: calc(var(--nav-height) + 0.5rem) 0 1.5rem;
+  }
+  .ix-hero-inner {
+    gap: 1.5rem;
+  }
+  .ix-h1 {
+    font-size: clamp(2rem, 3.5vw, 3.2rem);
+    margin: 0 0 0.8rem;
+  }
+  .ix-lead {
+    font-size: clamp(0.85rem, 1vw, 0.95rem);
+    margin: 0 0 1.2rem;
+    line-height: 1.6;
+    max-width: 28rem;
+  }
+  .ix-badge {
+    margin-bottom: 0.6rem;
+  }
+  .ix-cta {
+    margin-bottom: 1rem;
+  }
+  .ix-trust {
+    gap: 0.8rem;
+  }
+  .ix-trust-item strong {
+    font-size: 1rem;
+  }
+  .ix-card-shell {
+    transform: scale(0.9);
+    transform-origin: right center;
+  }
+}
+
+/* 650px - Very constrained height */
+@media (max-height: 650px) and (min-width: 961px) {
+  .ix-h1 {
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+  }
+  .ix-card-shell {
+    transform: scale(0.82);
+    transform-origin: right center;
+  }
+  .ix-cta {
+    transform: scale(0.9);
+    transform-origin: left center;
+  }
+}
