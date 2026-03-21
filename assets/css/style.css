@@ -32,6 +32,30 @@
   box-sizing: border-box;
 }
 
+/* ── Root font-size scaling for large screens ──────
+   All rem values scale with this, so the entire
+   site grows proportionally on bigger displays.
+   16px  = default phones / tablets / small laptops
+   17px  = 15-inch laptops / standard desktops (1366-1600px)
+   18px  = large desktops / 1080p at 100% DPI (1600-1919px)
+   19px  = 1440p / 2K monitors (1920px+)
+   ─────────────────────────────────────────────── */
+html {
+  font-size: 16px;
+}
+
+@media (min-width: 1366px) {
+  html { font-size: 17px; }
+}
+
+@media (min-width: 1600px) {
+  html { font-size: 18px; }
+}
+
+@media (min-width: 1920px) {
+  html { font-size: 19px; }
+}
+
 html,
 body {
   margin: 0;
