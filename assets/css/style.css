@@ -137,6 +137,13 @@ main {
   color: var(--text-secondary);
 }
 
+/* When the section-header is left-aligned (e.g. scan page),
+   the subtitle should also start from the left, not be centred. */
+.section-header[style*="text-align: left"] .section-subtitle,
+.section-header[style*="text-align:left"] .section-subtitle {
+  margin-left: 0;
+}
+
 /* Navbar */
 
 .navbar {

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard – ScamShield</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ── Admin Design System ───────────────────── */
+    :root {
+      --adm-bg: #000810;
+      --adm-sidebar-w: 240px;
+      --adm-accent: #f59e0b;
+      --adm-accent-dim: rgba(245,158,11,.12);
+      --adm-border: rgba(245,158,11,.12);
+      --adm-card-bg: rgba(0,8,30,.5);
+      --adm-text: #e2e8f0;
+      --adm-muted: rgba(226,232,240,.45);
+    }
+
+    * { box-sizing: border-box; }
+    body { margin:0; font-family:var(--font-sans); background:var(--adm-bg);
+           color:var(--adm-text); display:flex; min-height:100vh; overflow-x:hidden; }
+
+    /* ── Layout ─────────────────────────────────── */
+    .adm-layout { display:flex; min-height:100vh; width:100%; }
+
+    /* ── Sidebar ─────────────────────────────────── */
+    .adm-sidebar {
+      width: var(--adm-sidebar-w);
+      background: rgba(0,5,20,.85);
+      border-right: 1px solid var(--adm-border);
+      display: flex; flex-direction: column;
+      flex-shrink: 0; position: fixed; top:0; left:0;
+      height: 100vh; z-index: 100;
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    }
+
+    .adm-logo {
+      display:flex; align-items:center; gap:.75rem;
+      padding: 1.5rem 1.2rem 1.2rem;
+      border-bottom: 1px solid var(--adm-border);
+    }
+    .adm-logo-mark {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+      box-shadow: 0 0 18px rgba(245,158,11,.5);
+    }
+    .adm-logo-name { font-size: .85rem; font-weight: 800; color: #fff; }
+    .adm-logo-sub {
+      font-size: .58rem; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--adm-accent); font-family: 'Courier New', monospace;
+    }
+
+    .adm-nav { flex: 1; padding: 1rem 0; overflow-y: auto; }
+    .adm-nav-label {
+      font-size: .58rem; font-weight: 700; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--adm-muted);
+      padding: .5rem 1.2rem .3rem; font-family: 'Courier New', monospace;
+    }
+
+    .adm-tab-btn {
+      display: flex; align-items: center; gap: .7rem;
+      width: 100%; padding: .7rem 1.2rem;
+      background: none; border: none; color: var(--adm-muted);
+      font-size: .87rem; font-weight: 500; cursor: pointer;
+      text-align: left; transition: all .18s ease;
+      border-radius: 0; position: relative;
+    }
+    .adm-tab-btn .adm-tab-icon { font-size: 1rem; width: 20px; text-align: center; }
+    .adm-tab-btn:hover { color: #fff; background: rgba(255,255,255,.04); }
+    .adm-tab-btn.active {
+      color: var(--adm-accent); background: var(--adm-accent-dim);
+      border-right: 2px solid var(--adm-accent);
+    }
+
+    .adm-sidebar-footer {
+      padding: 1rem 1.2rem;
+      border-top: 1px solid var(--adm-border);
+    }
+    .adm-admin-info { margin-bottom: .8rem; }
+    #admin-name { font-size: .85rem; font-weight: 700; color: #fff; display:block; }
+    #admin-email { font-size: .7rem; color: var(--adm-muted); display:block; }
+    .adm-logout-btn {
+      width: 100%; padding: .55rem .8rem; border-radius: 8px;
+      background: rgba(248,113,113,.08); border: 1px solid rgba(248,113,113,.2);
+      color: #f87171; font-size: .78rem; font-weight: 600;
+      cursor: pointer; transition: all .2s;
+    }
+    .adm-logout-btn:hover { background: rgba(248,113,113,.15); }
+
+    /* ── Main Content ─────────────────────────────── */
+    .adm-main {
+      margin-left: var(--adm-sidebar-w);
+      flex: 1; display: flex; flex-direction: column; min-height: 100vh;
+    }
+
+    .adm-topbar {
+      padding: 1.2rem 2rem;
+      border-bottom: 1px solid var(--adm-border);
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(0,5,20,.5); backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 50;
+    }
+    .adm-topbar-title {
+      font-size: 1.1rem; font-weight: 800; color: #fff;
+    }
+    .adm-topbar-badge {
+      display: flex; align-items: center; gap: .45rem;
+      padding: .25rem .8rem; border-radius: 999px;
+      background: var(--adm-accent-dim);
+      border: 1px solid rgba(245,158,11,.3);
+      color: var(--adm-accent); font-size: .68rem;
+      font-weight: 700; font-family: 'Courier New', monospace;
+      letter-spacing: .1em; text-transform: uppercase;
+    }
+    .adm-topbar-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--adm-accent);
+      box-shadow: 0 0 8px var(--adm-accent);
+      animation: dot-pulse 2s ease-in-out infinite;
+    }
+    @keyframes dot-pulse { 50% { box-shadow: 0 0 16px var(--adm-accent); } }
+
+    /* ── Tab Panes ─────────────────────────────────── */
+    .adm-content { padding: 2rem; flex: 1; }
+    .adm-tab-pane { display: none; }
+    .adm-tab-pane.active { display: block; animation: fade-in .2s ease; }
+    @keyframes fade-in { from { opacity: 0; transform: translateY(4px); } }
+
+    /* ── State Messages ────────────────────────────── */
+    .adm-loading, .adm-empty, .adm-error-msg {
+      padding: 3rem; text-align: center;
+      color: var(--adm-muted); font-size: .9rem;
+    }
+    .adm-error-msg { color: #f87171; }
+    .adm-count {
+      font-size: .72rem; color: var(--adm-muted);
+      margin-top: .75rem; font-family: 'Courier New', monospace;
+    }
+
+    /* ── Stats Cards ───────────────────────────────── */
+    .adm-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.2rem; margin-bottom: 2rem;
+    }
+    .adm-stat-card {
+      background: var(--adm-card-bg);
+      border: 1px solid var(--adm-border);
+      border-top: 2px solid var(--c);
+      border-radius: 14px; padding: 1.4rem 1.3rem;
+      backdrop-filter: blur(12px);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .adm-stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,.4);
+    }
+    .adm-stat-icon { font-size: 1.5rem; margin-bottom: .6rem; }
+    .adm-stat-val {
+      font-size: 2rem; font-weight: 900; color: var(--c);
+      letter-spacing: -.03em; line-height: 1;
+    }
+    .adm-stat-lbl {
+      font-size: .72rem; color: var(--adm-muted); margin-top: .3rem;
+      text-transform: uppercase; letter-spacing: .1em;
+      font-family: 'Courier New', monospace;
+    }
+    .adm-stat-sub {
+      font-size: .7rem; color: #34d399; margin-top: .35rem;
+    }
+
+    /* ── Risk Bar ──────────────────────────────────── */
+    .adm-section-title {
+      font-size: .72rem; font-weight: 700; letter-spacing: .15em;
+      text-transform: uppercase; color: var(--adm-muted);
+      font-family: 'Courier New', monospace; margin-bottom: .8rem;
+    }
+    .adm-risk-bar-wrap {
+      background: var(--adm-card-bg); border: 1px solid var(--adm-border);
+      border-radius: 14px; padding: 1.5rem;
+    }
+    .adm-risk-bar {
+      height: 12px; border-radius: 999px; overflow: hidden;
+      background: rgba(255,255,255,.05);
+      display: flex; margin-bottom: 1rem;
+    }
+    .adm-risk-seg { height: 100%; transition: width .6s ease; }
+    .adm-risk-legend { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .adm-leg-item {
+      display: flex; align-items: center; gap: .4rem;
+      font-size: .75rem; color: var(--adm-text);
+    }
+    .adm-leg-item span {
+      width: 10px; height: 10px; border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* ── Tables ────────────────────────────────────── */
+    .adm-table-wrap {
+      overflow-x: auto; border-radius: 14px;
+      border: 1px solid var(--adm-border);
+      background: var(--adm-card-bg);
+    }
+    .adm-table {
+      width: 100%; border-collapse: collapse; min-width: 700px;
+    }
+    .adm-table th {
+      background: rgba(0,0,0,.4);
+      padding: .75rem 1rem; text-align: left;
+      font-size: .68rem; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--adm-muted);
+      font-family: 'Courier New', monospace;
+      border-bottom: 1px solid var(--adm-border);
+      white-space: nowrap;
+    }
+    .adm-table td {
+      padding: .7rem 1rem; font-size: .82rem;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      vertical-align: middle;
+    }
+    .adm-table tr:last-child td { border-bottom: none; }
+    .adm-table tr:hover td { background: rgba(255,255,255,.02); }
+    .adm-muted { color: var(--adm-muted); font-size: .78rem; }
+    .adm-email { font-family: 'Courier New', monospace; font-size: .78rem; color: #00d4ff; }
+    .adm-snippet {
+      max-width: 220px; overflow: hidden; text-overflow: ellipsis;
+      white-space: nowrap; color: var(--adm-muted); font-size: .78rem;
+    }
+
+    /* ── Action Buttons ────────────────────────────── */
+    .adm-action-btns { display:flex; gap:.4rem; flex-wrap: wrap; }
+    .adm-act-btn {
+      padding: .3rem .7rem; border-radius: 7px; font-size: .72rem;
+      font-weight: 600; cursor: pointer; border: 1px solid transparent;
+      transition: all .18s; white-space: nowrap;
+    }
+    .adm-act-warning {
+      background: rgba(245,158,11,.1); border-color: rgba(245,158,11,.3);
+      color: #f59e0b;
+    }
+    .adm-act-warning:hover { background: rgba(245,158,11,.2); }
+    .adm-act-danger {
+      background: rgba(248,113,113,.1); border-color: rgba(248,113,113,.3);
+      color: #f87171;
+    }
+    .adm-act-danger:hover { background: rgba(248,113,113,.2); }
+
+    /* ── Settings Tab ──────────────────────────────── */
+    .adm-settings-card {
+      background: var(--adm-card-bg); border: 1px solid var(--adm-border);
+      border-radius: 14px; padding: 1.8rem; max-width: 600px;
+      margin-bottom: 1.2rem;
+    }
+    .adm-settings-title {
+      font-size: 1rem; font-weight: 700; color: #fff; margin: 0 0 1.2rem;
+    }
+    .adm-settings-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: .7rem 0; border-bottom: 1px solid rgba(255,255,255,.05);
+      font-size: .85rem;
+    }
+    .adm-settings-row:last-child { border-bottom: none; }
+    .adm-settings-row label { color: var(--adm-muted); font-size: .78rem; }
+    .adm-settings-row span { color: #fff; font-weight: 600; }
+
+    /* ── Mobile Responsive ─────────────────────────── */
+    @media (max-width: 768px) {
+      .adm-sidebar {
+        width: 60px; overflow: hidden;
+      }
+      .adm-logo-name, .adm-logo-sub, .adm-tab-btn span,
+      .adm-nav-label, .adm-sidebar-footer { display: none; }
+      .adm-tab-btn { padding: .75rem; justify-content: center; }
+      .adm-tab-btn .adm-tab-icon { width: auto; }
+      .adm-main { margin-left: 60px; }
+      .adm-content { padding: 1rem; }
+      .adm-topbar { padding: 1rem; }
+      :root { --adm-sidebar-w: 60px; }
+    }
+  </style>
+</head>
+<body>
+<div class="adm-layout">
+
+  <!-- ── Sidebar ──────────────────────────────────────── -->
+  <aside class="adm-sidebar">
+    <div class="adm-logo">
+      <div class="adm-logo-mark">🛡</div>
+      <div>
+        <div class="adm-logo-name">ScamShield</div>
+        <div class="adm-logo-sub">Admin Panel</div>
+      </div>
+    </div>
+
+    <nav class="adm-nav" aria-label="Admin navigation">
+      <div class="adm-nav-label">Management</div>
+      <button class="adm-tab-btn" data-tab="stats" onclick="switchTab('stats')" id="tab-btn-stats">
+        <span class="adm-tab-icon">📊</span>
+        <span>Overview</span>
+      </button>
+      <button class="adm-tab-btn" data-tab="users" onclick="switchTab('users')" id="tab-btn-users">
+        <span class="adm-tab-icon">👥</span>
+        <span>Users</span>
+      </button>
+      <button class="adm-tab-btn" data-tab="scans" onclick="switchTab('scans')" id="tab-btn-scans">
+        <span class="adm-tab-icon">🔍</span>
+        <span>Scans</span>
+      </button>
+      <button class="adm-tab-btn" data-tab="reports" onclick="switchTab('reports')" id="tab-btn-reports">
+        <span class="adm-tab-icon">🚨</span>
+        <span>Reports</span>
+      </button>
+      <div class="adm-nav-label" style="margin-top:.5rem">System</div>
+      <button class="adm-tab-btn" data-tab="settings" onclick="switchTab('settings')" id="tab-btn-settings">
+        <span class="adm-tab-icon">⚙️</span>
+        <span>Settings</span>
+      </button>
+      <button class="adm-tab-btn" onclick="window.open('index.html','_blank')" style="margin-top:.2rem">
+        <span class="adm-tab-icon">🌐</span>
+        <span>View Site</span>
+      </button>
+    </nav>
+
+    <div class="adm-sidebar-footer">
+      <div class="adm-admin-info">
+        <span id="admin-name">Admin</span>
+        <span id="admin-email"></span>
+      </div>
+      <button class="adm-logout-btn" onclick="adminLogout()">🔓 Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- ── Main ─────────────────────────────────────────── -->
+  <main class="adm-main">
+    <!-- Top bar -->
+    <div class="adm-topbar">
+      <div class="adm-topbar-title">Admin Dashboard</div>
+      <div class="adm-topbar-badge">
+        <span class="adm-topbar-dot"></span>
+        Live
+      </div>
+    </div>
+
+    <!-- Tab content -->
+    <div class="adm-content">
+
+      <!-- Overview -->
+      <div class="adm-tab-pane" id="tab-stats">
+        <div class="adm-loading">Loading stats…</div>
+      </div>
+
+      <!-- Users -->
+      <div class="adm-tab-pane" id="tab-users">
+        <div class="adm-loading">Loading users…</div>
+      </div>
+
+      <!-- Scans -->
+      <div class="adm-tab-pane" id="tab-scans">
+        <div class="adm-loading">Loading scans…</div>
+      </div>
+
+      <!-- Reports -->
+      <div class="adm-tab-pane" id="tab-reports">
+        <div class="adm-loading">Loading reports…</div>
+      </div>
+
+      <!-- Settings -->
+      <div class="adm-tab-pane" id="tab-settings">
+        <div class="adm-settings-card">
+          <div class="adm-settings-title">⚙️ Admin Account</div>
+          <div class="adm-settings-row">
+            <label>Logged in as</label>
+            <span id="set-name">—</span>
+          </div>
+          <div class="adm-settings-row">
+            <label>Email</label>
+            <span id="set-email">—</span>
+          </div>
+          <div class="adm-settings-row">
+            <label>Role</label>
+            <span style="color:#f59e0b">● Super Admin</span>
+          </div>
+          <div class="adm-settings-row">
+            <label>Session</label>
+            <span style="color:#34d399">Active (24h JWT)</span>
+          </div>
+        </div>
+
+        <div class="adm-settings-card">
+          <div class="adm-settings-title">🌐 API Endpoints</div>
+          <div class="adm-settings-row">
+            <label>Backend base URL</label>
+            <span id="set-api" style="font-family:'Courier New',monospace;font-size:.78rem;color:#00d4ff">—</span>
+          </div>
+          <div class="adm-settings-row">
+            <label>Admin routes prefix</label>
+            <span style="font-family:'Courier New',monospace;font-size:.78rem;color:#a78bfa">/api/admin/*</span>
+          </div>
+          <div class="adm-settings-row">
+            <label>Docs (Swagger UI)</label>
+            <a id="set-docs" href="#" target="_blank"
+              style="color:#00d4ff;font-size:.78rem;font-family:'Courier New',monospace">—</a>
+          </div>
+        </div>
+
+        <div class="adm-settings-card">
+          <div class="adm-settings-title">🔑 Create First Admin</div>
+          <p style="font-size:.82rem;color:var(--adm-muted);margin:0 0 1rem;line-height:1.6">
+            To promote an existing user to admin, run this command in your backend directory:
+          </p>
+          <pre style="background:rgba(0,0,0,.5);border:1px solid rgba(245,158,11,.15);
+              border-radius:10px;padding:1rem;font-size:.75rem;color:#a78bfa;
+              overflow-x:auto;line-height:1.7;margin:0">python -c "
+from app.database import SessionLocal
+from app.models import User
+db = SessionLocal()
+u = db.query(User).filter(User.email=='your@email.com').first()
+u.is_admin = True
+db.commit()
+print('Done -', u.email, 'is now admin')
+db.close()
+"</pre>
+        </div>
+
+        <button class="btn btn-danger" onclick="adminLogout()"
+          style="margin-top:.5rem;min-width:140px;background:rgba(248,113,113,.1);
+          border:1px solid rgba(248,113,113,.3);color:#f87171;">
+          🔓 Sign Out
+        </button>
+      </div>
+
+    </div><!-- /adm-content -->
+  </main>
+</div>
+
+<script src="js/admin.js"></script>
+<script>
+  // Populate settings tab
+  const _u = (() => { try { return JSON.parse(localStorage.getItem('adminUser')||'{}'); } catch { return {}; } })();
+  const API_BASE = 'http://localhost:8000';
+  document.getElementById('set-name').textContent  = _u.name  || '—';
+  document.getElementById('set-email').textContent = _u.email || '—';
+  document.getElementById('set-api').textContent   = API_BASE;
+  const docsEl = document.getElementById('set-docs');
+  docsEl.textContent = API_BASE + '/docs';
+  docsEl.href        = API_BASE + '/docs';
+</script>
+</body>
+</html>

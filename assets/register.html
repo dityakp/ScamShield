@@ -41,18 +41,13 @@
     <main class="auth-main">
         <div class="container auth-grid">
             <aside class="auth-aside">
-                <h1 class="auth-aside-title">Create your ScamShield analyst account.</h1>
+                <h1 class="auth-aside-title">Create your ScamShield account.</h1>
                 <p class="auth-aside-text">
-                    Set up a secure login so you can track scan history, reported scams and export anonymized data for
-                    your final‑year
-                    report.
+                    Set up your secure account to track scan history, report scams and stay protected across all your devices.
                 </p>
                 <div class="auth-highlight">
-                    <div class="auth-highlight-badge">∞</div>
-                    <div>
-                        The form is wired with strong password hints and clean validation – simply connect it to your
-                        <strong>/register</strong> backend route.
-                    </div>
+                    <div class="auth-highlight-badge">🔒</div>
+                    <div>Your account is protected with industry-standard password hashing and secure JWT authentication. We never store plain-text passwords.</div>
                 </div>
             </aside>
 
@@ -60,8 +55,7 @@
                 <header class="card-header">
                     <h2 class="card-title">Register for ScamShield</h2>
                     <p class="card-subtitle">
-                        Fields are validated on the frontend. Password strength feedback helps users choose a safer
-                        password.
+                        Create a free account to access AI scanning, scam reporting, and your personal threat dashboard.
                     </p>
                 </header>
                 <form id="register-form" class="form-grid" novalidate>
@@ -122,10 +116,13 @@
                     <div class="form-actions">
                         <div class="form-secondary-link">
                             Already have an account?
-                            <a href="login.html">Login instead</a>
+                            <a href="login.html">Sign in instead</a>
                         </div>
                         <button type="submit" class="btn btn-primary" id="registerButton">Create account</button>
                     </div>
+                    <p class="field-hint" style="margin-top:.75rem;text-align:center;">
+                        🔒 By creating an account, you agree that your name, email and scan/report activity will be securely stored on our servers.
+                    </p>
                 </form>
             </section>
         </div>
@@ -133,7 +130,7 @@
 
     <footer class="footer">
         <div class="container footer-inner">
-            <div>© <span id="year"></span> ScamShield. Account system for your AI project.</div>
+            <div>© <span id="year"></span> ScamShield. AI-powered scam protection.</div>
             <div class="footer-links">
                 <a class="footer-link" href="index.html">Home</a>
                 <a class="footer-link" href="scan.html">Scan</a>

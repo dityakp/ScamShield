@@ -5,6 +5,7 @@ SQLAlchemy ORM models for ScamShield.
 from datetime import datetime, timezone
 
 from sqlalchemy import (
+    Boolean,
     Column,
     Integer,
     String,
@@ -30,10 +31,13 @@ class User(Base):
     name = Column(String(120), nullable=False)
     email = Column(String(255), unique=True, index=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
+    is_admin = Column(Boolean, default=False, nullable=False)
+    is_active = Column(Boolean, default=True, nullable=False)
     created_at = Column(DateTime(timezone=True), default=_utcnow)
 
     scans = relationship("ScanResult", back_populates="user", cascade="all, delete-orphan")
     reports = relationship("ScamReport", back_populates="user", cascade="all, delete-orphan")
+
 
 
 class ScanResult(Base):

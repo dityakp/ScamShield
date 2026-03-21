@@ -50,8 +50,7 @@
                 <div class="section-kicker">Instant AI scan</div>
                 <h1 class="section-title">Scan a suspicious message or URL</h1>
                 <p class="section-subtitle" style="text-align: left;">
-                    Enter any text, SMS, email snippet or website link. ScamShield will simulate a call to your
-                    <code>/predict</code> backend endpoint and display a risk level, score and explanation.
+                    Enter any text, SMS, email snippet or website link. ScamShield will analyse it using our AI engine and provide a real-time risk level, confidence score and explanation.
                 </p>
             </div>
 
@@ -82,14 +81,12 @@
                                 placeholder="Example: Dear customer, your bank account will be suspended in 24 hours. Click https://secure-verification-update.com to update your KYC."
                                 required></textarea>
                             <div id="scanInputError" class="field-error"></div>
-                            <p class="field-hint">
-                                Do not paste passwords or OTPs. This demo does not send data to any server until you
-                                implement the
-                                <code>/predict</code> API.
-                            </p>
                         </div>
 
                         <div class="form-actions justify-end">
+                            <p class="field-hint" style="margin-right:auto;">
+                                🔒 Submitted content is processed by our AI engine and your scan results are stored securely in your account history. Do not paste passwords or OTPs.
+                            </p>
                             <button type="submit" class="btn btn-primary" id="scanButton">Run AI scan</button>
                         </div>
                     </form>
@@ -121,7 +118,7 @@
                             <div class="precaution-header">
                                 <span class="precaution-icon">🛡️</span>
                                 <strong>AI Safety Advice</strong>
-                                <span class="precaution-badge">Powered by Grok</span>
+                                <span class="precaution-badge">ScamShield AI</span>
                             </div>
                             <ol id="precautionList" class="precaution-list"></ol>
                         </div>
@@ -134,7 +131,7 @@
 
     <footer class="footer">
         <div class="container footer-inner">
-            <div>© <span id="year"></span> ScamShield. Educational prototype.</div>
+            <div>© <span id="year"></span> ScamShield. AI-powered scam protection.</div>
             <div class="footer-links">
                 <a class="footer-link" href="index.html">Home</a>
                 <a class="footer-link" href="report.html">Report</a>
