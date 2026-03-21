@@ -59,7 +59,7 @@ class PredictResponse(BaseModel):
     indicators: List[str]
     type: str
     created_at: datetime
-    precaution: Optional[str] = None  # xAI-generated safety advice
+    precaution: Optional[str] = None  # Gemini-generated safety advice
 
     class Config:
         from_attributes = True
