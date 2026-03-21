@@ -56,6 +56,17 @@ html {
   html { font-size: 19px; }
 }
 
+/* Override up-scaling if the viewport is vertically short (e.g. laptops with display scaling) */
+@media (max-height: 900px) {
+  html { font-size: 16px !important; }
+}
+@media (max-height: 768px) {
+  html { font-size: 15px !important; }
+}
+@media (max-height: 650px) {
+  html { font-size: 14px !important; }
+}
+
 html,
 body {
   margin: 0;
@@ -92,9 +103,9 @@ main {
 
 .container {
   width: 100%;
-  max-width: 1280px;
+  max-width: 1920px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 clamp(1.5rem, 5vw, 4rem);
 }
 
 .section {
