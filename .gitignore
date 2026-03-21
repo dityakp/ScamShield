@@ -97,13 +97,15 @@ htmlcov/
 *.h5
 *.hdf5
 *.model
-*.joblib
 data/raw/
 data/processed/
 notebooks/.ipynb_checkpoints/
 backend/app/ml/data/sample_scams.csv
 backend/app/ml/data/training_data.csv
-backend/app/ml/data/*.joblib
+backend/app/ml/data/sample_scams_clean.csv
+backend/app/ml/data/holdout_first_chunk.csv
+backend/app/ml/data/enron_ham.csv
+backend/app/ml/data/_drive_download/
 
 # ─── AWS / Cloud ──────────────────────────────────────────────────────────────
 .aws/
