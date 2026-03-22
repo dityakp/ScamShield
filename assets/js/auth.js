@@ -6,7 +6,7 @@
   const global = (window.ScamShield = window.ScamShield || {});
 
   // ── Backend base URL (change in production) ──
-  const API_BASE = window.SCAMSHIELD_API_BASE || 'http://127.0.0.1:8000';
+  const API_BASE = window.SCAMSHIELD_API_BASE || '';
 
   function $(id) {
     return document.getElementById(id);

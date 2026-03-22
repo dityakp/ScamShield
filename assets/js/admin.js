@@ -3,7 +3,7 @@
  * Handles authentication guard, data loading, and all admin actions.
  */
 
-const API = window.SCAMSHIELD_API_BASE || 'http://127.0.0.1:8000';
+const API = window.SCAMSHIELD_API_BASE || '';
 
 // ── Auth Guard ───────────────────────────────────────────────────────────────
 const adminToken = localStorage.getItem('adminToken');

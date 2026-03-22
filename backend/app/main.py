@@ -70,11 +70,16 @@ def serve_frontend(full_path: str):
     # Strip leading slash just in case
     full_path = full_path.lstrip("/")
 
+    # Detect if it's a known static asset folder
+    is_static = any(full_path.startswith(prefix) for prefix in ["css/", "js/", "images/"])
+
     # Bare root -> index.html
     if not full_path:
-        target = os.path.join(_assets_dir, "index.html")
-    else:
+        target = os.path.join(_assets_dir, "html", "index.html")
+    elif is_static:
         target = os.path.join(_assets_dir, full_path)
+    else:
+        target = os.path.join(_assets_dir, "html", full_path)
 
     # Security: prevent directory traversal
     target = os.path.abspath(target)
@@ -85,12 +90,12 @@ def serve_frontend(full_path: str):
     if os.path.isfile(target):
         return FileResponse(target)
 
-    # Try .html extension (e.g. /admin-login -> admin-login.html)
-    if os.path.isfile(target + ".html"):
+    # Try .html extension (e.g. /admin-login -> html/admin-login.html)
+    if not is_static and os.path.isfile(target + ".html"):
         return FileResponse(target + ".html")
 
     # Fallback to index.html
-    fallback = os.path.join(_assets_dir, "index.html")
+    fallback = os.path.join(_assets_dir, "html", "index.html")
     if os.path.isfile(fallback):
         return FileResponse(fallback)
 
