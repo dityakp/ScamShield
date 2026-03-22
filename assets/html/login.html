@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login – ScamShield</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/global-theme.css" />
+</head>
+
+<body class="auth-page">
+    <div class="spinner-overlay" id="global-spinner" aria-hidden="true">
+        <div class="spinner" aria-label="Loading"></div>
+    </div>
+    <div class="toast-container" id="toast-container"></div>
+
+    <header class="navbar">
+        <div class="container navbar-inner">
+            <a href="index.html" class="brand" aria-label="ScamShield home">
+                <div class="brand-mark"></div>
+                <div>
+                    <div class="brand-text-main">ScamShield</div>
+                    <span class="brand-text-sub">AI scam firewall</span>
+                </div>
+            </a>
+
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+                <span class="nav-toggle-bar"></span>
+            </button>
+
+            <nav class="nav-menu" id="nav-menu" aria-label="Primary">
+                <div class="nav-auth-links">
+                    <a class="nav-link primary" href="login.html">Login</a>
+                    <a class="nav-link" href="register.html">Register</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="auth-main">
+        <div class="container auth-grid">
+            <aside class="auth-aside">
+                <h1 class="auth-aside-title">Welcome back to your scam radar.</h1>
+                <p class="auth-aside-text">
+                    Log in to access your personal dashboard, review past AI scans, and analyze scam patterns reported
+                    by the community.
+                </p>
+                <div class="auth-highlight">
+                    <div class="auth-highlight-badge">◆</div>
+                    <div>
+                        Get a full view of your scan history, reported scams and AI risk assessments — all secured behind your personal account.
+                    </div>
+                </div>
+            </aside>
+
+            <section class="card">
+                <header class="card-header">
+                    <h2 class="card-title">Login to ScamShield</h2>
+                    <p class="card-subtitle">Enter your email and password to access your ScamShield account.</p>
+                </header>
+                <form id="login-form" class="form-grid" novalidate>
+                    <div class="form-field">
+                        <label class="form-label" for="loginEmail">Email address <span>*</span></label>
+                        <input id="loginEmail" class="input" type="email" placeholder="you@example.com"
+                            autocomplete="email" required />
+                        <div id="loginEmailError" class="field-error"></div>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-label" for="loginPassword">Password <span>*</span></label>
+                        <div class="pw-wrap">
+                            <input id="loginPassword" class="input" type="password" placeholder="••••••••"
+                                autocomplete="current-password" required />
+                            <button type="button" class="pw-toggle" aria-label="Toggle password visibility"
+                                onclick="togglePw('loginPassword', this)">
+                                <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="loginPasswordError" class="field-error"></div>
+                    </div>
+
+                    <div id="loginGeneralError" class="field-error"></div>
+
+                    <div class="form-actions">
+                        <div class="form-secondary-link">
+                            New here?
+                            <a href="register.html">Create an account</a>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="loginButton">Sign in</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <div>© <span id="year"></span> ScamShield. AI-powered scam protection.</div>
+            <div class="footer-links">
+                <a class="footer-link" href="index.html">Home</a>
+                <a class="footer-link" href="scan.html">Scan</a>
+                <a class="footer-link" href="report.html">Report</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/matrix.js"></script>
+    <script src="../js/transitions.js"></script>
+    <script>
+        function togglePw(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const isHidden = input.type === 'password';
+            input.type = isHidden ? 'text' : 'password';
+            btn.innerHTML = isHidden
+                ? `<svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+                : `<svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+            btn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+        }
+    </script>
+</body>
+
+</html>
