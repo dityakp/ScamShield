@@ -119,3 +119,12 @@ backend/app/ml/data/_drive_download/
 *.temp
 *.cache
 .cache/
+
+# ─── Terraform ────────────────────────────────────────────────────────────────
+.terraform/
+.terraform.*.lock.hcl
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.tfvars.json
+plan.cache
