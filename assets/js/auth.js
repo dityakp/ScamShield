@@ -205,7 +205,11 @@
       .then(function (res) {
         if (!res.ok) {
           return res.json().then(function (err) {
-            throw new Error(err.detail || 'Login failed.');
+            let errMsg = 'Login failed.';
+            if (err.detail) {
+              errMsg = Array.isArray(err.detail) ? err.detail[0].msg : err.detail;
+            }
+            throw new Error(errMsg);
           });
         }
         return res.json();
@@ -305,7 +309,11 @@
       .then(function (res) {
         if (!res.ok) {
           return res.json().then(function (err) {
-            throw new Error(err.detail || 'Registration failed.');
+            let errMsg = 'Registration failed.';
+            if (err.detail) {
+              errMsg = Array.isArray(err.detail) ? err.detail[0].msg : err.detail;
+            }
+            throw new Error(errMsg);
           });
         }
         return res.json();

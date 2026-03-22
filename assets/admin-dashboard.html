@@ -441,7 +441,7 @@ db.close()
 <script>
   // Populate settings tab
   const _u = (() => { try { return JSON.parse(localStorage.getItem('adminUser')||'{}'); } catch { return {}; } })();
-  const API_BASE = 'http://localhost:8000';
+  const API_BASE = window.location.origin;
   document.getElementById('set-name').textContent  = _u.name  || '—';
   document.getElementById('set-email').textContent = _u.email || '—';
   document.getElementById('set-api').textContent   = API_BASE;

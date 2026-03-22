@@ -224,7 +224,7 @@
   </div>
 
   <script>
-    const API = 'http://localhost:8000';
+    const API = window.SCAMSHIELD_API_BASE || 'http://127.0.0.1:8000';
 
     // Redirect if already logged in as admin
     if (localStorage.getItem('adminToken')) {
@@ -272,7 +272,11 @@
           window.location.href = 'admin-dashboard.html';
         } else {
           const err = await res.json();
-          generalErr.textContent = err.detail || 'Login failed. Check credentials.';
+          let errMsg = 'Login failed. Check credentials.';
+          if (err.detail) {
+            errMsg = Array.isArray(err.detail) ? err.detail[0].msg : err.detail;
+          }
+          generalErr.textContent = errMsg;
           btn.disabled = false;
           btn.textContent = 'Sign in as Admin';
         }
