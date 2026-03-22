@@ -23,6 +23,7 @@ ScamShield provides an accessible tool that helps users **identify scams early**
 | 🧠 **Explainable Results** | Shows why a message was flagged (keyword triggers, pattern match) |
 | 🗂️ **Public Scam Reporting** | Report scam phone numbers, links, or messages |
 | 📈 **Analytics Dashboard** | View scan history, reported scams, and risk distribution |
+| 👑 **Admin Dashboard** | Manage users, view platform-wide stats, and moderate reports |
 | 🔐 **JWT Authentication** | Secure login/registration with bcrypt password hashing |
 | ⚡ **Rate Limiting** | API protection via slowapi |
 | ☁️ **Docker Deployment** | Containerized with Docker Compose (PostgreSQL + FastAPI) |
@@ -49,17 +50,19 @@ Docker / AWS Infrastructure
 
 ```
 ScamShield/
-├── assets/                          # Frontend (HTML, CSS, JS)
-│   ├── index.html                   # Landing page
-│   ├── scan.html                    # Scan suspicious messages/URLs
-│   ├── report.html                  # Report a scam
-│   ├── dashboard.html               # User dashboard
-│   ├── login.html / register.html   # Authentication pages
+├── assets/                          # Frontend
+│   ├── html/                        # HTML pages
+│   │   ├── index.html               # Landing page
+│   │   ├── scan.html                # Scan suspicious messages/URLs
+│   │   ├── report.html              # Report a scam
+│   │   ├── dashboard.html           # User dashboard
+│   │   ├── login.html               # Authentication page
+│   │   ├── register.html            # Registration page
+│   │   ├── admin-login.html         # Admin Authentication
+│   │   └── admin-dashboard.html     # Admin dashboard
 │   ├── css/                         # Stylesheets
-│   └── js/
-│       ├── auth.js                  # Login/register API calls
-│       ├── scan.js                  # Scan API integration
-│       └── dashboard.js             # Dashboard API integration
+│   ├── js/                          # JavaScript
+│   └── images/                      # Images
 │
 ├── backend/
 │   ├── app/
@@ -74,7 +77,8 @@ ScamShield/
 │   │   │   ├── auth_router.py       # /api/register, /api/login, /api/logout
 │   │   │   ├── scan_router.py       # /api/predict, /api/history
 │   │   │   ├── report_router.py     # /api/report (POST + GET)
-│   │   │   └── dashboard_router.py  # /api/dashboard/stats
+│   │   │   ├── dashboard_router.py  # /api/dashboard/stats
+│   │   │   └── admin_router.py      # /api/admin/* endpoints
 │   │   └── ml/
 │   │       ├── predictor.py         # ML model loader + rule-based fallback
 │   │       ├── train.py             # Model training script
@@ -83,6 +87,18 @@ ScamShield/
 │   │           └── sample_scams.csv # Training dataset (75K+ samples)
 │   ├── Dockerfile
 │   └── .env / .env.example
+│
+├── infra/                           # Terraform Infrastructure
+│   ├── ec2.tf                       # EC2 instance config
+│   ├── security_groups.tf           # Security group rules
+│   ├── outputs.tf                   # Terraform outputs
+│   ├── provider.tf                  # AWS provider configuration
+│   └── variables.tf                 # Terraform variables
+│
+├── .github/workflows/               # CI/CD pipelines
+│   ├── docker-publish.yml           # Docker Hub auto-publish
+│   ├── terraform-apply.yml          # Auto-deploy via Terraform
+│   └── terraform-destroy.yml        # Destroy infrastructure pipeline
 │
 ├── requirements.txt                 # Python dependencies
 ├── docker-compose.yml               # PostgreSQL + Backend containers
@@ -117,6 +133,9 @@ ScamShield/
 | `POST` | `/api/report` | Submit a scam report | ✓ |
 | `GET`  | `/api/report` | User's report history | ✓ |
 | `GET`  | `/api/dashboard/stats` | Aggregated user stats | ✓ |
+| `POST` | `/api/admin/login` | Admin login | ✗ |
+| `GET`  | `/api/admin/stats` | Platform-wide stats | ✓ (Admin) |
+| `GET`  | `/api/admin/*` | Manage users, scans, reports | ✓ (Admin) |
 | `GET`  | `/` | Health check | ✗ |
 
 ---
@@ -306,7 +325,6 @@ Open the `assets/` folder with **VS Code Live Server** (port 5500) or any static
 
 - 🌐 Browser extension for real-time URL scanning
 - 📱 SMS classification via mobile app
-- 📊 Admin analytics dashboard
 - 🚨 Real-time scam alert notification system
 - 📲 Native mobile application (React Native)
 - 🤖 LLM-based explanation generation
