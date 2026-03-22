@@ -1,9 +1,11 @@
 """
-ScamShield Backend – FastAPI application entry point.
+ScamShield Backend - FastAPI application entry point.
 """
+import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, HTMLResponse
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -32,12 +34,12 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ── Register routers ─────────────────────────────────────────
+# ── Register API routers (must come before catch-all) ─────────
 app.include_router(auth_router.router)
 app.include_router(scan_router.router)
 app.include_router(report_router.router)
@@ -45,6 +47,51 @@ app.include_router(dashboard_router.router)
 app.include_router(admin_router.router)
 
 
-@app.get("/", tags=["Health"])
+@app.get("/health", tags=["Health"])
 def health_check():
     return {"status": "ok", "service": "ScamShield API", "version": "1.0.0"}
+
+
+# ── Frontend static file serving ──────────────────────────────
+# Resolve the assets directory relative to this file:
+# backend/app/main.py  ->  ../../assets  ->  ScamShield/assets
+_assets_dir = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "assets")
+)
+
+
+@app.get("/{full_path:path}", include_in_schema=False)
+def serve_frontend(full_path: str):
+    """
+    Catch-all GET route that serves files from the assets/ directory.
+    Registered AFTER all API routers, so /api/* routes always win.
+    POST/PUT/DELETE requests to /api/* are never affected.
+    """
+    # Strip leading slash just in case
+    full_path = full_path.lstrip("/")
+
+    # Bare root -> index.html
+    if not full_path:
+        target = os.path.join(_assets_dir, "index.html")
+    else:
+        target = os.path.join(_assets_dir, full_path)
+
+    # Security: prevent directory traversal
+    target = os.path.abspath(target)
+    if not target.startswith(_assets_dir):
+        return HTMLResponse("Not found", status_code=404)
+
+    # Exact file match (html, css, js, images, etc.)
+    if os.path.isfile(target):
+        return FileResponse(target)
+
+    # Try .html extension (e.g. /admin-login -> admin-login.html)
+    if os.path.isfile(target + ".html"):
+        return FileResponse(target + ".html")
+
+    # Fallback to index.html
+    fallback = os.path.join(_assets_dir, "index.html")
+    if os.path.isfile(fallback):
+        return FileResponse(fallback)
+
+    return HTMLResponse("Not found", status_code=404)
