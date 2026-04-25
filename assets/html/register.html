@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register – ScamShield</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/global-theme.css" />
+</head>
+
+<body class="auth-page">
+    <div class="spinner-overlay" id="global-spinner" aria-hidden="true">
+        <div class="spinner" aria-label="Loading"></div>
+    </div>
+    <div class="toast-container" id="toast-container"></div>
+
+    <header class="navbar">
+        <div class="container navbar-inner">
+            <a href="index.html" class="brand" aria-label="ScamShield home">
+                <div class="brand-mark"></div>
+                <div>
+                    <div class="brand-text-main">ScamShield</div>
+                    <span class="brand-text-sub">AI scam firewall</span>
+                </div>
+            </a>
+
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+                <span class="nav-toggle-bar"></span>
+            </button>
+
+            <nav class="nav-menu" id="nav-menu" aria-label="Primary">
+                <div class="nav-auth-links">
+                    <a class="nav-link" href="login.html">Login</a>
+                    <a class="nav-link primary" href="register.html">Register</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="auth-main">
+        <div class="container auth-grid">
+            <aside class="auth-aside">
+                <h1 class="auth-aside-title">Create your ScamShield account.</h1>
+                <p class="auth-aside-text">
+                    Set up your secure account to track scan history, report scams and stay protected across all your devices.
+                </p>
+                <div class="auth-highlight">
+                    <div class="auth-highlight-badge">🔒</div>
+                    <div>Your account is protected with industry-standard password hashing and secure JWT authentication. We never store plain-text passwords.</div>
+                </div>
+            </aside>
+
+            <section class="card">
+                <header class="card-header">
+                    <h2 class="card-title">Register for ScamShield</h2>
+                    <p class="card-subtitle">
+                        Create a free account to access AI scanning, scam reporting, and your personal threat dashboard.
+                    </p>
+                </header>
+                <form id="register-form" class="form-grid" novalidate>
+                    <div class="form-field">
+                        <label class="form-label" for="regName">Full name <span>*</span></label>
+                        <input id="regName" class="input" type="text" placeholder="Your name" autocomplete="name"
+                            required />
+                        <div id="regNameError" class="field-error"></div>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-label" for="regEmail">Email address <span>*</span></label>
+                        <input id="regEmail" class="input" type="email" placeholder="you@example.com"
+                            autocomplete="email" required />
+                        <div id="regEmailError" class="field-error"></div>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-label" for="regPassword">Password <span>*</span></label>
+                        <div class="pw-wrap">
+                            <input id="regPassword" class="input" type="password" placeholder="At least 8 characters"
+                                autocomplete="new-password" required />
+                            <button type="button" class="pw-toggle" aria-label="Toggle password visibility"
+                                onclick="togglePw('regPassword', this)">
+                                <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="regPasswordError" class="field-error"></div>
+                        <div class="password-strength" id="passwordStrength">
+                            <div class="password-bars">
+                                <span class="password-bar" data-index="1"></span>
+                                <span class="password-bar" data-index="2"></span>
+                                <span class="password-bar" data-index="3"></span>
+                            </div>
+                            <div class="password-strength-label" id="passwordStrengthLabel">Password strength: —</div>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-label" for="regConfirm">Confirm password <span>*</span></label>
+                        <div class="pw-wrap">
+                            <input id="regConfirm" class="input" type="password" placeholder="Repeat your password"
+                                autocomplete="new-password" required />
+                            <button type="button" class="pw-toggle" aria-label="Toggle confirm password visibility"
+                                onclick="togglePw('regConfirm', this)">
+                                <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="regConfirmError" class="field-error"></div>
+                    </div>
+
+                    <div class="form-actions">
+                        <div class="form-secondary-link">
+                            Already have an account?
+                            <a href="login.html">Sign in instead</a>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="registerButton">Create account</button>
+                    </div>
+                    <p class="field-hint" style="margin-top:.75rem;text-align:center;">
+                        🔒 By creating an account, you agree that your name, email and scan/report activity will be securely stored on our servers.
+                    </p>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <div>© <span id="year"></span> ScamShield. AI-powered scam protection.</div>
+            <div class="footer-links">
+                <a class="footer-link" href="index.html">Home</a>
+                <a class="footer-link" href="scan.html">Scan</a>
+                <a class="footer-link" href="report.html">Report</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/matrix.js"></script>
+    <script src="../js/transitions.js"></script>
+    <script>
+        function togglePw(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const isHidden = input.type === 'password';
+            input.type = isHidden ? 'text' : 'password';
+            btn.innerHTML = isHidden
+                ? `<svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+                : `<svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+            btn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+        }
+    </script>
+</body>
+
+</html>

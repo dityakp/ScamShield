@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: scamshield_db
+      POSTGRES_USER: scamshield
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U scamshield -d scamshield_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    image: dityakp/scamshield:latest
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - backend/.env
+    environment:
+      DATABASE_URL: postgresql://scamshield:password@db:5432/scamshield_db
+
+  frontend:
+    image: dityakp/scamshield-frontend:latest
+    build:
+      context: .
+      dockerfile: frontend.Dockerfile
+    ports:
+      - "5500:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
