@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_DB: scamshield_db
       POSTGRES_USER: scamshield
@@ -10,13 +11,14 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U scamshield -d scamshield_db"]
+      test: [ "CMD-SHELL", "pg_isready -U scamshield -d scamshield_db" ]
       interval: 5s
       timeout: 5s
       retries: 5
 
   backend:
     image: dityakp/scamshield:latest
+    restart: unless-stopped
     build:
       context: .
       dockerfile: backend/Dockerfile
@@ -32,6 +34,7 @@ services:
 
   frontend:
     image: dityakp/scamshield-frontend:latest
+    restart: unless-stopped
     build:
       context: .
       dockerfile: frontend.Dockerfile
